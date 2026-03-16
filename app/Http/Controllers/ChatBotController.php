@@ -121,6 +121,36 @@ class ChatBotController extends Controller
             ];
         }
 
+        if ($module->type === 'select') {
+            $options = is_array($module->options) ? $module->options : json_decode($module->options, true) ?? [];
+            if (!empty($options)) {
+                return [
+                    'key' => $module->key,
+                    'question' => $module->label_de,
+                    'type' => 'select',
+                    'options' => array_column($options, 'label'),
+                ];
+            }
+
+            // Fallback to hardcoded logic if no DB options are set
+            if ($module->key === 'design_type') {
+                return [
+                    'key' => $module->key,
+                    'question' => $module->label_de,
+                    'type' => 'select',
+                    'options' => ['Neues Design', 'Überarbeitung unser bisherigen Webseiten'],
+                ];
+            }
+            if ($module->key === 'anzahl_der_seiten') {
+                return [
+                    'key' => $module->key,
+                    'question' => 'Wie viele Seiten benötigen Sie?',
+                    'type' => 'select',
+                    'options' => ['2-10 Seiten', '11-30 Seiten', '31-50 Seiten'],
+                ];
+            }
+        }
+
         return [
             'key' => $module->key,
             'question' => 'Benötigen Sie: ' . $module->label_de . '?',
@@ -165,6 +195,57 @@ class ChatBotController extends Controller
             } elseif ($module->type === 'boolean' && ($value === true || $value === 'Ja')) {
                 $totalEstimate += $module->price;
                 $selectedModules[] = ['module' => $module, 'qty' => 1];
+            } elseif ($module->type === 'select') {
+                $options = is_array($module->options) ? $module->options : json_decode($module->options, true) ?? [];
+                
+                if (!empty($options)) {
+                    // DB-driven logic
+                    $price = 0;
+                    $found = false;
+                    foreach ($options as $opt) {
+                        if (mb_strtolower($opt['label']) === mb_strtolower($value)) {
+                            $price = (float) $opt['price'];
+                            $found = true;
+                            break;
+                        }
+                    }
+                    
+                    if ($found) {
+                        $totalEstimate += $price;
+                        $selectedModules[] = ['module' => $module, 'qty' => 1, 'override_price' => $price];
+                    }
+                } else {
+                    // Fallback to hardcoded logic
+                    if ($module->key === 'design_type') {
+                        $price = 0;
+                        if ($value === 'Neues Design') {
+                            $price = 2500;
+                        } elseif ($value === 'Überarbeitung unser bisherigen Webseiten' || mb_strpos($value, 'überarbeitung') !== false) {
+                            $price = 1200;
+                        }
+                        
+                        if ($price > 0) {
+                            $totalEstimate += $price;
+                            $selectedModules[] = ['module' => $module, 'qty' => 1, 'override_price' => $price];
+                        }
+                    } elseif ($module->key === 'anzahl_der_seiten') {
+                        $price = 0;
+                        if($value === 'Onepager(nur eine Seite)')
+                            $price = 0;
+                        if ($value === '2-10 Seiten') {
+                            $price = 300;
+                        } elseif ($value === '11-30 Seiten') {
+                            $price = 700;
+                        } elseif ($value === '31-50 Seiten') {
+                            $price = 700;
+                        }
+                        
+                        if ($price > 0 || $value === 'Onepager(nur eine Seite)') {
+                            $totalEstimate += $price;
+                            $selectedModules[] = ['module' => $module, 'qty' => 1, 'override_price' => $price];
+                        }
+                    }
+                }
             }
         }
 
@@ -183,7 +264,7 @@ class ChatBotController extends Controller
             InquiryItem::create([
                 'inquiry_id' => $inquiry->id,
                 'price_module_id' => $item['module']->id,
-                'price_at_time' => $item['module']->price,
+                'price_at_time' => $item['override_price'] ?? $item['module']->price,
                 'quantity' => $item['qty'],
             ]);
         }

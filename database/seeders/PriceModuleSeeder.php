@@ -12,8 +12,26 @@ class PriceModuleSeeder extends Seeder
      */
     public function run(): void
     {
-    PriceModule::create([
-    'key' => 'cms_basic',
+        PriceModule::create([
+            'key' => 'design_type',
+            'label_de' => 'Was benötigen Sie?',
+            'description' => 'Neues Design oder Überarbeitung',
+            'price' => 0,
+            'type' => 'select',
+            'category' => 'base'
+        ]);
+
+        PriceModule::create([
+            'key' => 'anzahl_der_seiten',
+            'label_de' => 'Anzahl der Seiten',
+            'description' => 'Wie viele Seiten benötigen Sie?',
+            'price' => 0,
+            'type' => 'select',
+            'category' => 'base'
+        ]);
+
+        PriceModule::create([
+            'key' => 'cms_basic',
     'label_de' => 'Webseite mit CMS',
     'description' => 'Verwaltung von Inhalte über ein Backend',
     'price' => 1500.00,

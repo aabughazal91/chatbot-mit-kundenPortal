@@ -36,9 +36,12 @@ class PriceModuleController extends Controller
             'label_de' => 'required|string',
             'description' => 'nullable|string',
             'price' => 'required|numeric',
-            'type' => 'required|in:boolean,quantity',
+            'type' => 'required|in:boolean,quantity,select',
             'category' => 'nullable|string',
             'is_active' => 'boolean',
+            'options' => 'nullable|array',
+            'options.*.label' => 'required_with:options|string',
+            'options.*.price' => 'required_with:options|numeric',
         ]);
 
         $data['is_active'] = $request->has('is_active'); // checkbox
@@ -75,8 +78,11 @@ class PriceModuleController extends Controller
             'label_de' => 'required|string',
             'description' => 'nullable|string',
             'price' => 'required|numeric',
-            'type' => 'required|in:boolean,quantity',
+            'type' => 'required|in:boolean,quantity,select',
             'category' => 'nullable|string',
+            'options' => 'nullable|array',
+            'options.*.label' => 'required_with:options|string',
+            'options.*.price' => 'required_with:options|numeric',
         ]);
 
         $data['is_active'] = $request->has('is_active'); // checkbox

@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string('label_de');
             $table->text('description')->nullable();
             $table->decimal('price', 10, 2); // السعر الأساسي لهذه الميزة
-            $table->string('type')->default('boolean')->after('price');
+            
             $table->string('category');      // لتصنيف الأسئلة (Backend, Frontend, API)
-            $table->boolean('is_active')->default(true); // لتعطيل ميزة مؤقتاً دون حذفها
+            $table->boolean('is_active'); // لتعطيل ميزة مؤقتاً دون حذفها
             $table->timestamps();
 
         });

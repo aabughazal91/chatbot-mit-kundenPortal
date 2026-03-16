@@ -57,13 +57,34 @@
                     <select class="form-select" id="type" name="type" required>
                         <option value="boolean" {{ old('type', $module->type) === 'boolean' ? 'selected' : '' }}>Fixpreis (Ja/Nein Frage)</option>
                         <option value="quantity" {{ old('type', $module->type) === 'quantity' ? 'selected' : '' }}>Pro Einheit (Zahlen Eingabe)</option>
+                        <option value="select" {{ old('type', $module->type) === 'select' ? 'selected' : '' }}>Auswahl (Select/Optionen)</option>
                     </select>
                 </div>
             </div>
 
-            <div class="mb-4 form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="is_active" name="is_active" {{ old('is_active', $module->is_active ?? true) ? 'checked' : '' }}>
-                <label class="form-check-label" for="is_active">Modul ist Aktiv (wird im Chatbot angezeigt)</label>
+            
+
+            <div id="dynamic-options-container" style="display: none;" class="mb-4 border p-3 rounded bg-light">
+                <h6>Optionen für "Auswahl"</h6>
+                <div id="options-list">
+                    @php
+                        $options = old('options', $module->options ?? []);
+                    @endphp
+                    @foreach($options as $index => $option)
+                        <div class="row mb-2 option-row">
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" name="options[{{$index}}][label]" value="{{ $option['label'] ?? '' }}" placeholder="Label (z.B. Wordpress)" required>
+                            </div>
+                            <div class="col-md-5">
+                                <input type="number" step="0.01" class="form-control" name="options[{{$index}}][price]" value="{{ $option['price'] ?? '' }}" placeholder="Preis (€)" required>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-sm btn-danger remove-option mt-1">X</button>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="add-option-btn">+ Option hinzufügen</button>
             </div>
 
             <div class="d-flex justify-content-between">
@@ -72,7 +93,60 @@
                     <i class="bi bi-save"></i> {{ $module->exists ? 'Änderungen speichern' : 'Modul erstellen' }}
                 </button>
             </div>
+            <div class="mb-4 mt-4 form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="is_active" name="is_active" {{ old('is_active', $module->is_active ?? true) ? 'checked' : '' }}>
+                <label class="form-check-label" for="is_active">Modul ist Aktiv (wird im Chatbot angezeigt)</label>
+            </div>
         </form>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const typeSelect = document.getElementById('type');
+        const optionsContainer = document.getElementById('dynamic-options-container');
+        const addOptionBtn = document.getElementById('add-option-btn');
+        const optionsList = document.getElementById('options-list');
+        const priceInput = document.getElementById('price');
+        
+        function toggleOptions() {
+            if (typeSelect.value === 'select') {
+                optionsContainer.style.display = 'block';
+                // Force base price to 0 if select, as prices are in options? 
+                // Or leave base price for shared cost. 
+            } else {
+                optionsContainer.style.display = 'none';
+            }
+        }
+
+        typeSelect.addEventListener('change', toggleOptions);
+        toggleOptions();
+
+        let optionIndex = {{ count(old('options', $module->options ?? [])) }};
+
+        addOptionBtn.addEventListener('click', function() {
+            const row = document.createElement('div');
+            row.className = 'row mb-2 option-row';
+            row.innerHTML = `
+                <div class="col-md-5">
+                    <input type="text" class="form-control" name="options[${optionIndex}][label]" placeholder="Label (z.B. Wordpress)" required>
+                </div>
+                <div class="col-md-5">
+                    <input type="number" step="0.01" class="form-control" name="options[${optionIndex}][price]" placeholder="Preis (€)" required>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-sm btn-danger remove-option mt-1">X</button>
+                </div>
+            `;
+            optionsList.appendChild(row);
+            optionIndex++;
+        });
+
+        optionsList.addEventListener('click', function(e) {
+            if (e.target.classList.contains('remove-option')) {
+                e.target.closest('.option-row').remove();
+            }
+        });
+    });
+</script>
 @endsection

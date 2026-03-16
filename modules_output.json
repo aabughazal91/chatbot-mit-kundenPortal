@@ -1,0 +1,50 @@
+[
+    {
+        "id": 1,
+        "key": "cms_basic",
+        "label_de": "Webseite mit CMS",
+        "description": "Verwaltung von Inhalte \u00fcber ein Backend",
+        "price": "1500.00",
+        "type": "boolean",
+        "category": "base",
+        "is_active": 1,
+        "created_at": "2026-03-08T00:12:19.000000Z",
+        "updated_at": "2026-03-08T00:12:19.000000Z"
+    },
+    {
+        "id": 2,
+        "key": "ohne_cms",
+        "label_de": "Webseite Ohne CMS",
+        "description": "Kein Backend",
+        "price": "800.00",
+        "type": "boolean",
+        "category": "base",
+        "is_active": 1,
+        "created_at": "2026-03-08T01:22:53.000000Z",
+        "updated_at": "2026-03-08T01:22:55.000000Z"
+    },
+    {
+        "id": 3,
+        "key": "seiten_zahl",
+        "label_de": "Seiten Zahl",
+        "description": "Wie viele Seiten soll die Website ungef\u00e4hr haben? (Zahl)",
+        "price": "200.00",
+        "type": "quantity",
+        "category": "base",
+        "is_active": 1,
+        "created_at": "2026-03-08T01:24:06.000000Z",
+        "updated_at": "2026-03-08T01:46:31.000000Z"
+    },
+    {
+        "id": 4,
+        "key": "sprache",
+        "label_de": "Sprachen Zahl",
+        "description": "Wie vile Sprsahe",
+        "price": "100.00",
+        "type": "quantity",
+        "category": "base",
+        "is_active": 1,
+        "created_at": "2026-03-08T02:04:35.000000Z",
+        "updated_at": "2026-03-08T02:04:36.000000Z"
+    }
+]

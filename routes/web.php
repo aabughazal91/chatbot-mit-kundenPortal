@@ -1,0 +1,72 @@
+<?php
+
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ChatBotController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Customer\DashboardController as CustomerDashboardController;
+use Illuminate\Support\Facades\Route;
+use App\Mail\WelcomeCustomerMail;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/chatbot', [ChatBotController::class, 'show'])->name('chatbot.show');
+Route::post('/chatbot/message', [ChatBotController::class, 'message'])->name('chatbot.message');
+Route::get('/chatbot/pdf/{quote}', [ChatBotController::class, 'downloadPdf'])->name('chatbot.pdf');
+
+Route::get('/dashboard', function () {
+    if (Auth::user()->role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    }
+
+    return redirect()->route('customer.dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+// Admin dashboard route
+Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])
+    ->middleware(['auth', 'admin'])
+    ->name('admin.dashboard');
+
+// Customer dashboard route  
+Route::get('/customer/dashboard', [CustomerDashboardController::class, 'index'])
+    ->middleware(['auth', 'customer'])
+    ->name('customer.dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+
+Route::get('/test-mail', function () {
+    // جلب المستخدم صاحب الإيميل المذكور
+    $user = \App\Models\User::where('email', 'test@example.com')->first();
+
+    if (!$user) {
+        return "المستخدم غير موجود في قاعدة البيانات!";
+    }
+
+    // عرض بيانات المستخدم للتأكد قبل الإرسال
+    dump([
+        'ID' => $user->id,
+        'Name' => $user->name,
+        'Username' => $user->username, // سيظهر لك test29 هنا
+    ]);
+
+    $tempPassword = 'TestPassword123!';
+
+    try {
+        Mail::to($user->email)->send(new \App\Mail\WelcomeCustomerMail($user, $tempPassword));
+        return "تم إرسال الإيميل بنجاح إلى " . $user->email;
+    } catch (\Exception $e) {
+        return "فشل الإرسال: " . $e->getMessage();
+    }
+});
+require __DIR__ . '/auth.php';
+require __DIR__ . '/admin.php';
+require __DIR__ . '/customer.php';

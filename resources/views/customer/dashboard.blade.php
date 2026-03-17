@@ -72,9 +72,11 @@
                     @php
                         $status = strtolower($activeInquiry->clickUpMapping->clickup_status_name);
                         $percent = match($status) {
+                            'offen' => 5,
                             'todo' => 15,
-                            'in progress', 'doing' => 45,
+                            'in bearbeitung' => 45,
                             'review', 'qa' => 80,
+                            'warte auf kundenabnahme' => 90,
                             'complete', 'closed' => 100,
                             default => 5
                         };

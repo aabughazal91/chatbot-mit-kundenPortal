@@ -71,6 +71,7 @@
         <thead>
             <tr>
                 <th>Leistung / Modul</th>
+                <th>Menge </th>
                 <th style="text-align: right;">Preis (€)</th>
             </tr>
         </thead>
@@ -86,6 +87,11 @@
                 <td style="text-align: right;">{{ number_format($item->price_at_time * $item->quantity, 2, ',', '.') }}</td>
             </tr>
             @endforeach
+            <tr>
+                <td style="text-align: right;">
+                    {{ $item->quantity }}
+                </td>
+            </tr>
             <tr class="total-row">
                 <td style="text-align: right;">Gesamtsumme (Netto):</td>
                 <td style="text-align: right;">{{ number_format($inquiry->total_estimated_price, 2, ',', '.') }} €</td>

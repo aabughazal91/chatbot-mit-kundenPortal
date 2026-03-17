@@ -54,6 +54,9 @@
             <a href="{{ route('admin.inquiries.index') }}" class="{{ request()->routeIs('admin.inquiries.*') ? 'active' : '' }}">
                 <i class="bi bi-inbox me-2"></i> Anfragen (Inquiries)
             </a>
+            <a href="{{ route('admin.customers.index') }}" class="{{ request()->routeIs('admin.customers.*') ? 'active' : '' }}">
+                <i class="bi bi-person me-2"></i> Kunden
+            </a>
             
             <div class="mt-auto mb-3 text-center">
                 <form method="POST" action="{{ route('logout') }}">

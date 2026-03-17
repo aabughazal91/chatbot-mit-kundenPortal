@@ -67,8 +67,9 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Gesamtumsatz</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ number_format($stats['total_revenue'], 2, ',', '.') }} €</div>
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Gesamtkunden</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $stats['total_customers'] }}</div>
+                            
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-euro-sign fa-2x text-gray-300"></i>
@@ -131,8 +132,37 @@
             </div>
         </div>
 
+         <!-- Additional Stats -->
+            <div class="col-xl-4 col-lg-5 mb-2">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Weitere Statistiken</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center mb-3">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Gesamtumsatz</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ number_format($stats['total_revenue'], 2, ',', '.') }} €</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-users fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Aktive Module</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $stats['active_modules'] }}</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-cubes fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         <!-- Top Modules -->
-        <div class="col-xl-4 col-lg-5">
+        <div class="col-xl-4 col-lg-5 offset-xl-8 offset-lg-7 mt-2">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-primary">Top Module</h6>
@@ -156,32 +186,7 @@
                 </div>
             </div>
 
-            <!-- Additional Stats -->
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Weitere Statistiken</h6>
-                </div>
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center mb-3">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Gesamtkunden</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $stats['total_customers'] }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-users fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Aktive Module</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $stats['active_modules'] }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-cubes fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
+           
         </div>
     </div>
 </div>

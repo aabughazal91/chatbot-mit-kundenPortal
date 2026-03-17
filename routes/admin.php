@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\InquiryController;
 use App\Http\Controllers\Admin\PriceModuleController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\CustomerController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -24,4 +25,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/price-modules/{priceModule}/edit', [PriceModuleController::class, 'edit'])->name('price-modules.edit');
     Route::put('/price-modules/{priceModule}', [PriceModuleController::class, 'update'])->name('price-modules.update');
     Route::delete('/price-modules/{priceModule}', [PriceModuleController::class, 'destroy'])->name('price-modules.destroy');
+
+    // Customer routes (excluding show, since we probably only need index, create, store, edit, update, destroy)
+    Route::resource('customers', CustomerController::class)->except(['show']);
 });

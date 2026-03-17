@@ -1,3 +1,5 @@
+
+
 <x-mail::message>
 # Willkommen bei uns, {{ $user->name }}!
 
@@ -22,5 +24,5 @@ Zum Kundenportal einloggen
 Aus Sicherheitsgründen empfehlen wir, das Passwort nach dem ersten Login zu ändern, oder verwenden Sie die Funktion "Passwort vergessen" auf der Login-Seite, um ein neues festzulegen.
 
 Mit freundlichen Grüßen,<br>
-Ihr Team von {{ config('app.name') }}
+Ihr Team von Agentur-77
 </x-mail::message>

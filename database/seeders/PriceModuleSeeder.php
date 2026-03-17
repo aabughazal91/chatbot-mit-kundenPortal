@@ -18,7 +18,8 @@ class PriceModuleSeeder extends Seeder
             'description' => 'Neues Design oder Überarbeitung',
             'price' => 0,
             'type' => 'select',
-            'category' => 'base'
+            'category' => 'base',
+            'is_active' => true
         ]);
 
         PriceModule::create([
@@ -27,17 +28,19 @@ class PriceModuleSeeder extends Seeder
             'description' => 'Wie viele Seiten benötigen Sie?',
             'price' => 0,
             'type' => 'select',
-            'category' => 'base'
+            'category' => 'base',
+            'is_active' => true
         ]);
 
         PriceModule::create([
             'key' => 'cms_basic',
-    'label_de' => 'Webseite mit CMS',
-    'description' => 'Verwaltung von Inhalte über ein Backend',
-    'price' => 1500.00,
-    'type' => 'boolean',
-    'category' => 'base'
-    ]);
+            'label_de' => 'Webseite mit CMS',
+            'description' => 'Verwaltung von Inhalte über ein Backend',
+            'price' => 1500.00,
+            'type' => 'boolean',
+            'category' => 'base',
+            'is_active' => true
+        ]);
     }
 
 }

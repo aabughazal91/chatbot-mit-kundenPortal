@@ -26,6 +26,7 @@ class ChatBotController extends Controller
         if (! $firstModule) {
             return view('chatbot', [
                 'welcome' => 'Hallo! Ich bin der Chatbot.',
+                'first' => 'Als Erstes sollten SIe den Projekteart aus wählen',
                 'firstStep' => [
                     'key' => 'error',
                     'question' => 'Keine aktiven Module verfügbar.',
@@ -37,6 +38,7 @@ class ChatBotController extends Controller
 
         return view('chatbot', [
             'welcome' => 'Hallo! Ich bin der Chatbot. Ich helfe Ihnen bei der Kostenschätzung.',
+            'first' => 'Als Erstes sollten SIe den Projekteart aus wählen',
             'firstStep' => $this->transformModuleToStep($firstModule),
         ]);
     }
@@ -97,8 +99,13 @@ class ChatBotController extends Controller
         $nextModule = $modules[$stepIndex];
         $nextStep = $this->transformModuleToStep($nextModule);
 
+        $botMsg = 'Verstanden. ' . $nextStep['question'];
+        if (!empty($nextStep['description'])) {
+            $botMsg .= "\n<span style=\"color: #666; font-size: 0.9em;\"><i>" . $nextStep['description'] . "</i></span>";
+        }
+
         return response()->json([
-            'bot' => 'Verstanden. ' . $nextStep['question'],
+            'bot' => $botMsg,
             'type' => $nextStep['type'],
             'options' => $nextStep['options'] ?? null,
             'done' => false,
@@ -115,6 +122,7 @@ class ChatBotController extends Controller
             return [
                 'key' => $module->key,
                 'question' => 'Wie viele ' . $module->label_de . ' benötigen Sie? (Bitte Zahl eingeben)',
+                'description' => $module->description,
                 'type' => 'number', // سيستخدم الـ Frontend حقل إدخال رقمي
                 'min' => 1,
                 'max' => 50,
@@ -127,6 +135,7 @@ class ChatBotController extends Controller
                 return [
                     'key' => $module->key,
                     'question' => $module->label_de,
+                    'description' => $module->description,
                     'type' => 'select',
                     'options' => array_column($options, 'label'),
                 ];
@@ -137,6 +146,7 @@ class ChatBotController extends Controller
                 return [
                     'key' => $module->key,
                     'question' => $module->label_de,
+                    'description' => $module->description,
                     'type' => 'select',
                     'options' => ['Neues Design', 'Überarbeitung unser bisherigen Webseiten'],
                 ];
@@ -145,8 +155,19 @@ class ChatBotController extends Controller
                 return [
                     'key' => $module->key,
                     'question' => 'Wie viele Seiten benötigen Sie?',
+                    'description' => $module->description,
                     'type' => 'select',
                     'options' => ['2-10 Seiten', '11-30 Seiten', '31-50 Seiten'],
+                ];
+            }
+            if ($module->key === 'anzahl_der_sprachen') {
+                return [
+                    'key' => $module->key,
+                    'question' => 'Wie viele Sprachen benötigen Sie?',
+                    'description' => $module->description,
+                    'type' => 'number',
+                    'min' => 1,
+                    'max' => 20,
                 ];
             }
         }
@@ -154,6 +175,7 @@ class ChatBotController extends Controller
         return [
             'key' => $module->key,
             'question' => 'Benötigen Sie: ' . $module->label_de . '?',
+            'description' => $module->description,
             'type' => 'boolean',
             'options' => ['Ja', 'Nein'],
         ];
@@ -244,8 +266,20 @@ class ChatBotController extends Controller
                             $totalEstimate += $price;
                             $selectedModules[] = ['module' => $module, 'qty' => 1, 'override_price' => $price];
                         }
+                    } elseif ($module->key === 'anzahl_der_sprachen') {
+                        $price = 0;
+                        if ((int)$value === 1) {
+                            $price = 0;
+                        } elseif ((int)$value >= 2) {
+                            $price = ((int)$value - 1) * 700;
+                        }
+
+                        if ($price > 0) {
+                            $totalEstimate += $price;
+                            $selectedModules[] = ['module' => $module, 'qty' => 1, 'override_price' => $price];
+                        }
                     }
-                }
+                } 
             }
         }
 

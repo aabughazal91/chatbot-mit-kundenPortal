@@ -43,30 +43,6 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::get('/test-mail', function () {
-    // جلب المستخدم صاحب الإيميل المذكور
-    $user = \App\Models\User::where('email', 'test@example.com')->first();
-
-    if (!$user) {
-        return "المستخدم غير موجود في قاعدة البيانات!";
-    }
-
-    // عرض بيانات المستخدم للتأكد قبل الإرسال
-    dump([
-        'ID' => $user->id,
-        'Name' => $user->name,
-        'Username' => $user->username, // سيظهر لك test29 هنا
-    ]);
-
-    $tempPassword = 'TestPassword123!';
-
-    try {
-        Mail::to($user->email)->send(new \App\Mail\WelcomeCustomerMail($user, $tempPassword));
-        return "تم إرسال الإيميل بنجاح إلى " . $user->email;
-    } catch (\Exception $e) {
-        return "فشل الإرسال: " . $e->getMessage();
-    }
-});
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin.php';
 require __DIR__ . '/customer.php';

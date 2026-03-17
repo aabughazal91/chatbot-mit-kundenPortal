@@ -39,7 +39,12 @@
 
     <div id="chat" class="chat">
       <div class="msg bot">{{ $welcome }}</div>
-      <div class="msg bot">{{ $firstStep['question'] }}</div>
+      <div class="msg bot">
+        {{ $firstStep['question'] }}
+        @if(!empty($firstStep['description']))
+          <br><span style="color: #666; font-size: 0.9em;"><i>{{ $firstStep['description'] }}</i></span>
+        @endif
+      </div>
     </div>
 
     <div class="action-area">

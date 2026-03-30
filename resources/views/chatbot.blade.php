@@ -6,9 +6,9 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>Chatbot Demo</title>
   <style>
-    body { font-family: system-ui, -apple-system, Arial, sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f3f4f6; }
+    body { font-family: system-ui, -apple-system, Arial, sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #1887a8ff; }
     .box { width: 100%; max-width: 600px; height: 90vh; background: #fff; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; }
-    .header { background: #0b3d91; color: white; padding: 18px; text-align: center; font-weight: 600; font-size: 1.25rem; }
+    .header { background: #0f264eff; color: white; padding: 18px; text-align: center; font-weight: 600; font-size: 1.25rem; }
     .chat { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 14px; background: #fafafa; scroll-behavior: smooth; }
     .msg { max-width: 80%; padding: 12px 18px; border-radius: 18px; font-size: 15px; line-height: 1.5; word-wrap: break-word; }
     .msg.bot { align-self: flex-start; background: #e9ecef; color: #212529; border-bottom-left-radius: 4px; }
@@ -28,7 +28,7 @@
     .input-row { display: flex; gap: 10px; }
     input { flex: 1; padding: 14px 20px; border-radius: 26px; border: 1px solid #ddd; outline: none; font-size: 15px; background: #f8f9fa; transition: border 0.2s;}
     input:focus { border-color: #0b3d91; background: #fff; }
-    button.send { background: #0b3d91; color: white; border: none; width: 48px; height: 48px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.2s; flex-shrink: 0;}
+    button.send { background: #0f264eff; color: white; border: none; width: 48px; height: 48px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.2s; flex-shrink: 0;}
     button.send:hover { background: #082d6b; transform: scale(1.05); }
     button.send svg { width: 22px; height: 22px; fill: currentColor; transform: translateX(2px); }
   </style>

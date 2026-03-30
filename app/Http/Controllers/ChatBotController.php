@@ -213,10 +213,10 @@ class ChatBotController extends Controller
 
             if ($module->type === 'quantity' && is_numeric($value) && (int) $value > 0) {
                 $totalEstimate += ($module->price * (int) $value);
-                $selectedModules[] = ['module' => $module, 'qty' => (int) $value];
+                $selectedModules[] = ['module' => $module, 'qty' => (int) $value, 'customer_choice' => (string) $value];
             } elseif ($module->type === 'boolean' && ($value === true || $value === 'Ja')) {
                 $totalEstimate += $module->price;
-                $selectedModules[] = ['module' => $module, 'qty' => 1];
+                $selectedModules[] = ['module' => $module, 'qty' => 1, 'customer_choice' => 'Ja'];
             } elseif ($module->type === 'select') {
                 $options = is_array($module->options) ? $module->options : json_decode($module->options, true) ?? [];
                 
@@ -234,7 +234,7 @@ class ChatBotController extends Controller
                     
                     if ($found) {
                         $totalEstimate += $price;
-                        $selectedModules[] = ['module' => $module, 'qty' => 1, 'override_price' => $price];
+                        $selectedModules[] = ['module' => $module, 'qty' => 1, 'override_price' => $price, 'customer_choice' => (string) $value];
                     }
                 } else {
                     // Fallback to hardcoded logic
@@ -248,7 +248,7 @@ class ChatBotController extends Controller
                         
                         if ($price > 0) {
                             $totalEstimate += $price;
-                            $selectedModules[] = ['module' => $module, 'qty' => 1, 'override_price' => $price];
+                            $selectedModules[] = ['module' => $module, 'qty' => 1, 'override_price' => $price, 'customer_choice' => (string) $value];
                         }
                     } elseif ($module->key === 'anzahl_der_seiten') {
                         $price = 0;
@@ -264,7 +264,7 @@ class ChatBotController extends Controller
                         
                         if ($price > 0 || $value === 'Onepager(nur eine Seite)') {
                             $totalEstimate += $price;
-                            $selectedModules[] = ['module' => $module, 'qty' => 1, 'override_price' => $price];
+                            $selectedModules[] = ['module' => $module, 'qty' => 1, 'override_price' => $price, 'customer_choice' => (string) $value];
                         }
                     } elseif ($module->key === 'anzahl_der_sprachen') {
                         $price = 0;
@@ -276,7 +276,7 @@ class ChatBotController extends Controller
 
                         if ($price > 0) {
                             $totalEstimate += $price;
-                            $selectedModules[] = ['module' => $module, 'qty' => 1, 'override_price' => $price];
+                            $selectedModules[] = ['module' => $module, 'qty' => 1, 'override_price' => $price, 'customer_choice' => (string) $value];
                         }
                     }
                 } 
@@ -300,6 +300,7 @@ class ChatBotController extends Controller
                 'price_module_id' => $item['module']->id,
                 'price_at_time' => $item['override_price'] ?? $item['module']->price,
                 'quantity' => $item['qty'],
+                'customer_choice' => $item['customer_choice'] ?? null,
             ]);
         }
 
@@ -393,9 +394,12 @@ class ChatBotController extends Controller
             ->where('quote_number', $quoteNumber)
             ->firstOrFail();
 
-        $pdf = app('dompdf.wrapper');
-        $pdf->loadView('pdf.quote', compact('inquiry'));
+        // Temporarily commented out for testing HTML/CSS
+        // $pdf = app('dompdf.wrapper');
+        // $pdf->loadView('pdf.quote', compact('inquiry'));
+        // return $pdf->download("angebot-{$quoteNumber}.pdf");
 
-        return $pdf->download("angebot-{$quoteNumber}.pdf");
+        // Just for rapid CSS testing:
+        return view('pdf.quote', compact('inquiry'));
     }
 }

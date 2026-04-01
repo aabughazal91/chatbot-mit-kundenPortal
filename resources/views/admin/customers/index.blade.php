@@ -20,7 +20,8 @@
                         <th>Email</th>
                         <th>Rolle</th>
                         <th>Status</th>
-                        <th>Erstellt am</th>
+                        <th>Firma</th>
+                        <th>PLZ + Ort</th>
                         <th class="text-end">Aktionen</th>
                     </tr>
                 </thead>
@@ -44,7 +45,8 @@
                                     <span class="badge bg-warning text-dark">Ausstehend</span>
                                 @endif
                             </td>
-                            <td>{{ $customer->created_at->format('d.m.Y H:i') }}</td>
+                            <td>{{ $customer->company }}</td>
+                            <td>{{ trim(($customer->zip ?? '') . ' ' . ($customer->city ?? '')) }}</td>
                             <td class="text-end">
                                 <a href="{{ route('admin.customers.edit', $customer) }}" class="btn btn-sm btn-outline-primary">
                                     <i class="bi bi-pencil"></i>
@@ -62,7 +64,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center">Keine Kunden gefunden.</td>
+                            <td colspan="8" class="text-center">Keine Kunden gefunden.</td>
                         </tr>
                     @endforelse
                 </tbody>

@@ -32,6 +32,11 @@ class User extends Authenticatable
         'password',
         'role',
         'is_confirmed',
+        'company',
+        'phone',
+        'street',
+        'zip',
+        'city',
     ];
 
     /**

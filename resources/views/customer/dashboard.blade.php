@@ -72,12 +72,12 @@
                     @php
                         $status = strtolower($activeInquiry->clickUpMapping->clickup_status_name);
                         $percent = match($status) {
-                            'offen' => 5,
-                            'todo' => 15,
-                            'in bearbeitung' => 45,
+                            'offen', 'open' => 5,
+                            'todo', 'to do' => 15,
+                            'in bearbeitung', 'in progress' => 45,
                             'review', 'qa' => 80,
-                            'warte auf kundenabnahme' => 90,
-                            'complete', 'closed' => 100,
+                            'warte auf kundenabnahme', 'waiting' => 90,
+                            'complete', 'closed', 'done' => 100,
                             default => 5
                         };
                         $barColor = $percent == 100 ? 'bg-success' : ($percent > 50 ? 'bg-primary' : 'bg-info');
@@ -106,11 +106,11 @@
                 <table class="table table-hover mb-0 align-middle">
                     <thead class="table-light">
                         <tr>
-                            <th class="ps-4">Anfrage-Nr.</th>
+                            <th class="ps-4">Anfrage-Nr./ Projekt</th>
                             <th>Datum</th>
                             <th>Summe (Netto)</th>
                             <th>Status</th>
-                            <th class="text-end pe-4">Aktion</th>
+                            <!-- <th class="text-end pe-4">Aktion</th> -->
                         </tr>
                     </thead>
                     <tbody>
@@ -128,11 +128,11 @@
                                     <span class="badge bg-secondary px-3">Archiviert</span>
                                 @endif
                             </td>
-                            <td class="text-end pe-4">
+                            <!-- <td class="text-end pe-4">
                                 <a href="{{ route('chatbot.pdf', $inq->quote_number) }}" class="btn btn-sm btn-outline-danger shadow-sm">
                                     <i class="bi bi-file-earmark-pdf"></i> PDF-Angebot
                                 </a>
-                            </td>
+                            </td> -->
                         </tr>
                         @empty
                         <tr>

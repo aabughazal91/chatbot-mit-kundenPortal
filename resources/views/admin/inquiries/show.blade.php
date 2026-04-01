@@ -17,7 +17,9 @@
                     <table class="table">
                         <thead class="table-light">
                             <tr>
+
                                 <th>Modul</th>
+                                <th>Kundenwahl</th>
                                 <th class="text-center">Menge</th>
                                 <th class="text-end">Preis (Einzeln)</th>
                                 <th class="text-end">Summe</th>
@@ -27,6 +29,7 @@
                             @foreach($inquiry->items as $item)
                             <tr>
                                 <td>{{ $item->priceModule ? $item->priceModule->label_de : 'Unbekannt (Gelöscht)' }}</td>
+                                <td>{{ $item->customer_choice ?? ($item->quantity > 1 ? $item->quantity . ' Stück' : 'Ja') }}</td>
                                 <td class="text-center">{{ $item->quantity }}</td>
                                 <td class="text-end">{{ number_format($item->price_at_time, 2, ',', '.') }} €</td>
                                 <td class="text-end">{{ number_format($item->price_at_time * $item->quantity, 2, ',', '.') }} €</td>
@@ -69,6 +72,24 @@
                 </form>
             </div>
         </div>
+        <div>
+            <div class="card shadow-sm mb-4 border-success">
+                <div class="card-header bg-success text-white">
+                    <h6 class="mb-0"><i class="bi bi-card-text"></i> Projekt Name</h6>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('admin.inquiries.updateProjectName', $inquiry) }}" method="POST">
+                        @csrf
+                        @method('PATCH')
+                        <div class="mb-3">
+                            <label class="form-label">Update Projekt Name</label>
+                            <input type="text" name="quote_number" class="form-control" value="{{ $inquiry->quote_number }}">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Projekt Name Speichern</button>
+                    </form>
+                </div>
+            </div>
+        </div>
 
         <!-- User Verknüpfung -->
         <div class="card shadow-sm mb-4 border-success">
@@ -86,8 +107,8 @@
                     <form action="{{ route('admin.inquiries.linkUser', $inquiry) }}" method="POST">
                         @csrf
                         <div class="mb-2">
-                            <label class="form-label small">E-Mail oder Benutzername (Verpflichtend)</label>
-                            <input type="text" name="identifier" class="form-control form-control-sm" required placeholder="kunde@beispiel.de oder username">
+                            <label class="form-label small">Kunden E-Mail (Verpflichtend)</label>
+                            <input type="text" name="identifier" class="form-control form-control-sm" required placeholder="[EMAIL_ADDRESS]">
                         </div>
                         <div class="mb-3">
                             <label class="form-label small">Name (Optional)</label>

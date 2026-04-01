@@ -55,6 +55,26 @@
                     </div>
                 @endif
             </div>
+            <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="company" class="form-label">Firma</label>
+                        <input type="text" class="form-control" id="company" name="company" value="{{ old('company', $customer->company) }}" >
+                    </div>
+                    <div class="col-md-6">
+                        <label for="phone" class="form-label">Telefon</label>
+                        <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone', $customer->phone) }}" >
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="street" class="form-label">Straße + Hausnummer</label>
+                        <input type="text" class="form-control" id="street" name="street" value="{{ old('street', $customer->street) }}" >
+                    </div>
+                    <div class="col-md-6">
+                        <label for="zip" class="form-label">PLZ + Ort</label>
+                        <input type="text" class="form-control" id="zip" name="zip" value="{{ old('zip', $customer->zip) }}" >
+                    </div>
+                </div>
 
             <div class="row mb-4">
                 <div class="col-md-6">

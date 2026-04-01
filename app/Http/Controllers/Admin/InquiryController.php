@@ -111,6 +111,19 @@ class InquiryController extends Controller
         return back()->with('success', 'ClickUp Task ID verknüpft.');
     }
 
+    public function updateProjectName(Request $request, Inquiry $inquiry)
+    {
+        $request->validate([
+            'quote_number' => 'required|string|max:255',
+        ]);
+
+        $inquiry->update([
+            'quote_number' => $request->quote_number,
+        ]);
+
+        return back()->with('success', 'Projekt Name erfolgreich aktualisiert.');
+    }
+
     public function destroy(Inquiry $inquiry)
     {
         $inquiry->delete();

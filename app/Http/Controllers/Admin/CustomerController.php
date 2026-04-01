@@ -31,6 +31,11 @@ class CustomerController extends Controller
             'name' => 'required|string|max:255',
             'username' => 'nullable|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
+            'company' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:255',
+            'street' => 'nullable|string|max:255',
+            'zip' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:255',
             'role' => ['required', Rule::in(['admin', 'customer'])],
             'is_confirmed' => 'nullable|boolean',
         ]);
@@ -59,6 +64,11 @@ class CustomerController extends Controller
             'username' => ['nullable', 'string', 'max:255', Rule::unique('users')->ignore($customer->id)],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($customer->id)],
             'password' => 'nullable|string|min:8',
+            'company' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:255',
+            'street' => 'nullable|string|max:255',
+            'zip' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:255',
             'role' => ['required', Rule::in(['admin', 'customer', 'kunde'])],
             'is_confirmed' => 'nullable|boolean',
         ]);

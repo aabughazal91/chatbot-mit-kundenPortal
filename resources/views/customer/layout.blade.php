@@ -14,7 +14,7 @@
         }
         .sidebar {
             height: 100vh;
-            background-color: #343a40;
+            background-color: #09090aff;
             color: #fff;
             padding-top: 20px;
         }
@@ -68,6 +68,7 @@
             <nav class="navbar navbar-expand-lg navbar-light navbar-custom px-4 py-3">
                 <div class="container-fluid pl-0">
                     <span class="navbar-brand mb-0 h1">@yield('header_title', 'Customer Dashboard')</span>
+                    <img src="{{ asset('logo.png') }}" alt="">
                     <div class="d-flex">
                         <span class="navbar-text">
                             Eingeloggt als: <strong>{{ auth()->user()->name }}</strong>

@@ -12,7 +12,7 @@
             <table class="table table-hover mb-0 align-middle">
                 <thead class="table-light">
                     <tr>
-                        <th>Nummer</th>
+                        <th>Anfrage-Nr./ Projekt</th>
                         <th>Datum</th>
                         <th>Kunde</th>
                         <th>Status</th>

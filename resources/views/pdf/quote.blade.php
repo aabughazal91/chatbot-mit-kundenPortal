@@ -33,7 +33,7 @@
             letter-spacing: 0.5px;
         }
         .company-info p {
-            margin: 2px 0;
+            margin: 2px 10px;
             color: #555555;
             font-size: 12px;
         }
@@ -43,6 +43,8 @@
         .logo-img {
             max-width: 180px;
             height: auto;
+            margin: 30px 10px;
+            
         }
 
         /* Document Title Bar */
@@ -139,6 +141,8 @@
             border-top: 1px solid #eeeeee;
             padding-top: 15px;
         }
+ 
+
     </style>
 </head>
 <body>
@@ -147,8 +151,7 @@
     <table class="header-layout">
         <tr>
             <td class="company-info">
-                <h1>agentur-77</h1>
-                <br>
+                <img src="{{ asset('logo.png') }}" class="logo-img" alt="agentur-77 Logo">
                 <p><strong>Webdesign & Digitalisierung</strong></p>
                 <p>Bloherfelder Str. 71</p>
                 <p>26129 Oldenburg</p>
@@ -156,11 +159,11 @@
                 <p>E-Mail: info@agentur-77.de</p>
             </td>
             <td class="logo-container">
-                <img src="{{ asset('logo.png') }}" class="logo-img" alt="agentur-77 Logo">
+                
             </td>
         </tr>
     </table>
-
+   
     <!-- Title Bar -->
     <div class="title-bar">
         <h2 style="text-align: center;">Unverbindliche Kostenschätzung</h2>

@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class PriceModule extends Model
 {
     protected $casts = [
-        'options' => 'array',
+        'options' => 'array',   
+        'customer_choice' => 'array',
     ];
 
     public function inquiryItems() {

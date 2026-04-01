@@ -14,7 +14,7 @@
         }
         .sidebar {
             height: 100vh;
-            background-color: #343a40;
+            background-color: #000000ff;
             color: #fff;
             padding-top: 20px;
         }
@@ -70,17 +70,7 @@
 
         <!-- Main Content -->
         <div class="col-md-10 p-0">
-            <!-- Navbar -->
-            <nav class="navbar navbar-expand-lg navbar-light navbar-custom px-4 py-3">
-                <div class="container-fluid pl-0">
-                    <span class="navbar-brand mb-0 h1">@yield('header_title', 'Admin Dashboard')</span>
-                    <div class="d-flex">
-                        <span class="navbar-text">
-                            Eingeloggt als: <strong>{{ auth()->user()->name }}</strong>
-                        </span>
-                    </div>
-                </div>
-            </nav>
+          
 
             <!-- Page Content -->
             <div class="content mt-3">

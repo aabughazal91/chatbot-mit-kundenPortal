@@ -37,7 +37,7 @@ class ChatBotController extends Controller
         }
 
         return view('chatbot', [
-            'welcome' => 'Hallo! Ich bin der Chatbot. Ich helfe Ihnen bei der Kostenschätzung.',
+            'welcome' => 'Hallo! Ich bin agentur-77 Chat assistant. Ich helfe Ihnen bei der Kostenschätzung.',
             'first' => 'Als Erstes sollten SIe den Projekteart aus wählen',
             'firstStep' => $this->transformModuleToStep($firstModule),
         ]);

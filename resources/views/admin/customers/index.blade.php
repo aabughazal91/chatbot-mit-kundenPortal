@@ -13,15 +13,16 @@
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-bordered table-hover" width="100%" cellspacing="0">
-                <thead class="bg-light">
+                <thead class="bg-light text-center">
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
                         <th>Email</th>
                         <th>Rolle</th>
                         <th>Status</th>
+                        <th>Telefon</th>
                         <th>Firma</th>
-                        <th>PLZ + Ort</th>
+                        <th>Adresse</th>
                         <th class="text-end">Aktionen</th>
                     </tr>
                 </thead>
@@ -45,8 +46,9 @@
                                     <span class="badge bg-warning text-dark">Ausstehend</span>
                                 @endif
                             </td>
+                            <td>{{ $customer->phone}}</td>
                             <td>{{ $customer->company }}</td>
-                            <td>{{ trim(($customer->zip ?? '') . ' ' . ($customer->city ?? '')) }}</td>
+                            <td>{{ trim(($customer->street ?? '') . ' ' . ($customer->zip ?? '') . ' ' . ($customer->city ?? '')) }}</td>
                             <td class="text-end">
                                 <a href="{{ route('admin.customers.edit', $customer) }}" class="btn btn-sm btn-outline-primary">
                                     <i class="bi bi-pencil"></i>

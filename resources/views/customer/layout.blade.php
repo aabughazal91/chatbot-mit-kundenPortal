@@ -8,35 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f4f6f9;
-        }
-        .sidebar {
-            height: 100vh;
-            background-color: #09090aff;
-            color: #fff;
-            padding-top: 20px;
-        }
-        .sidebar a {
-            color: #adb5bd;
-            text-decoration: none;
-            padding: 10px 20px;
-            display: block;
-            transition: 0.2s;
-        }
-        .sidebar a:hover, .sidebar a.active {
-            color: #fff;
-            background-color: #495057;
-        }
-        .navbar-custom {
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-        }
-        .content {
-            padding: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/customer.css') }}">
 </head>
 <body>
 
@@ -44,7 +16,10 @@
     <div class="row">
         <!-- Sidebar -->
         <div class="col-md-2 sidebar d-flex flex-column">
-            <h4 class="text-center mb-4">Chatbot Kunde</h4>
+            <div  class="text-center" >
+                <x-application-logo />
+            </div>
+            <h4 class="text-center mb-4">Kunden Dashboard</h4>
             <a href="{{ route('customer.dashboard') }}" class="{{ request()->routeIs('customer.dashboard') ? 'active' : '' }}">
                 <i class="bi bi-speedometer2 me-2"></i> Dashboard
             </a>

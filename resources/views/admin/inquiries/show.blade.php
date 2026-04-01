@@ -31,14 +31,24 @@
                                 <td>{{ $item->priceModule ? $item->priceModule->label_de : 'Unbekannt (Gelöscht)' }}</td>
                                 <td>{{ $item->customer_choice ?? ($item->quantity > 1 ? $item->quantity . ' Stück' : 'Ja') }}</td>
                                 <td class="text-center">{{ $item->quantity }}</td>
-                                <td class="text-end">{{ number_format($item->price_at_time, 2, ',', '.') }} €</td>
+                                <td class="text-end">
+                                    <form action="{{ route('admin.inquiries.updateItemPrice', [$inquiry, $item]) }}" method="POST" class="d-inline-flex align-items-center gap-1 justify-content-end">
+                                        @csrf
+                                        @method('PATCH')
+                                        <input type="number" name="price_at_time" value="{{ $item->price_at_time }}" step="0.01" min="0" class="form-control form-control-sm text-end" style="width: 100px;">
+                                        <span>€</span>
+                                        <button type="submit" class="btn btn-outline-primary btn-sm" title="Preis speichern">
+                                            <i class="bi bi-check-lg"></i>
+                                        </button>
+                                    </form>
+                                </td>
                                 <td class="text-end">{{ number_format($item->price_at_time * $item->quantity, 2, ',', '.') }} €</td>
                             </tr>
                             @endforeach
                         </tbody>
                         <tfoot class="table-group-divider">
                             <tr>
-                                <th colspan="3" class="text-end fs-5">Gesamtsumme (Netto):</th>
+                                <th colspan="4" class="text-end fs-5">Gesamtsumme (Brutto):</th>
                                 <th class="text-end fs-5 text-primary">{{ number_format($inquiry->total_estimated_price, 2, ',', '.') }} €</th>
                             </tr>
                         </tfoot>

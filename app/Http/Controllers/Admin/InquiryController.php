@@ -124,6 +124,31 @@ class InquiryController extends Controller
         return back()->with('success', 'Projekt Name erfolgreich aktualisiert.');
     }
 
+    public function updateItemPrice(Request $request, Inquiry $inquiry, \App\Models\InquiryItem $item)
+    {
+        // Sicherstellen, dass das Item zu dieser Anfrage gehört
+        if ($item->inquiry_id !== $inquiry->id) {
+            abort(404);
+        }
+
+        $request->validate([
+            'price_at_time' => 'required|numeric|min:0',
+        ]);
+
+        $item->update([
+            'price_at_time' => $request->price_at_time,
+        ]);
+
+        // Gesamtsumme neu berechnen
+        $inquiry->update([
+            'total_estimated_price' => $inquiry->items()->get()->sum(function ($i) {
+                return $i->price_at_time * $i->quantity;
+            }),
+        ]);
+
+        return back()->with('success', 'Preis erfolgreich aktualisiert.');
+    }
+
     public function destroy(Inquiry $inquiry)
     {
         $inquiry->delete();

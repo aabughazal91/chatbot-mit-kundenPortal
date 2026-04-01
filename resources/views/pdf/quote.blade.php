@@ -4,214 +4,233 @@
     <meta charset="UTF-8">
     <title>Kalkulation - {{ $inquiry->quote_number }}</title>
     <style>
-        @page {
-            margin: 40px 50px;
-        }
-        body {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            color: #333333;
-            line-height: 1.5;
-            font-size: 13px;
-        }
+/* Page */
+@page {
+    margin: 60px 60px;
+}
 
-        /* Top Layout Table */
-        .header-layout {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 40px;
-        }
-        .header-layout td {
-            vertical-align: top;
-            border: none;
-            padding: 0;
-        }
-        .company-info h1 {
-            color: #0b3d91;
-            margin: 0;
-            font-size: 24px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-        .company-info p {
-            margin: 2px 10px;
-            color: #555555;
-            font-size: 12px;
-        }
-        .logo-container {
-            text-align: right;
-        }
-        .logo-img {
-            max-width: 180px;
-            height: auto;
-            margin: 30px 10px;
-            
-        }
+body {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    color: #1e293b;
+    line-height: 1.6;
+    position: relative;
+    
+}
 
-        /* Document Title Bar */
-        .title-bar {
-            background-color: #0b3d91;
-            color: #ffffff;
-            padding: 12px 20px;
-            margin-bottom: 25px;
-            border-radius: 4px;
-        }
-        .title-bar h2 {
-            margin: 0;
-            font-size: 20px;
-            font-weight: 400;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+/* 🔥 Watermark logo */
+.watermark {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.06;
+    z-index: 0;
+}
 
-        /* Info Block */
-        .info-block {
-            width: 100%;
-            margin-bottom: 30px;
-            border-collapse: collapse;
-        }
-        .info-block td {
-            padding: 4px 0;
-            font-size: 13px;
-        }
-        .info-label {
-            font-weight: bold;
-            color: #0b3d91;
-            width: 150px;
-        }
+.watermark img {
+    width: 400px;
+}
 
-        /* Items Table */
-        .items-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 30px;
-        }
-        .items-table th {
-            background-color: #f4f6fa;
-            color: #0b3d91;
-            font-weight: bold;
-            text-align: left;
-            padding: 12px 10px;
-            font-size: 13px;
-            border-bottom: 2px solid #0b3d91;
-            text-transform: uppercase;
-        }
-        .items-table td {
-            padding: 12px 10px;
-            border-bottom: 1px solid #eeeeee;
-        }
-        .align-right {
-            text-align: right;
-        }
-        .items-table tbody tr:nth-child(even) {
-            background-color: #fdfdfd;
-        }
 
-        /* Totals Section */
-        .total-wrapper {
-            width: 100%;
-            margin-top: 20px;
-            border-collapse: collapse;
-        }
-        .total-wrapper td {
-            padding: 12px 10px;
-            font-size: 16px;
-        }
-        .total-label {
-            font-weight: bold;
-            color: #333333;
-            text-transform: uppercase;
-        }
-        .total-value {
-            font-weight: bold;
-            color: #0b3d91;
-            font-size: 18px;
-        }
-        .total-row-highlight {
-            background-color: #f4f6fa;
-            border-top: 2px solid #0b3d91;
-            border-bottom: 2px solid #0b3d91;
-        }
 
-        /* Footer */
-        .footer {
-            margin-top: 60px;
-            text-align: center;
-            font-size: 11px;
-            color: #888888;
-            border-top: 1px solid #eeeeee;
-            padding-top: 15px;
-        }
- 
+/* Header */
+.header {
+    position: relative;
+    z-index: 2;
+    
+}
+
+.header-table {
+    width: 100%;
+}
+
+.logo {
+    width: 140px;
+}
+
+.company {
+    font-size: 12px;
+    color: #64748b;
+}
+
+/* Title */
+.title {
+    margin-top:30px
+}
+
+.title h1 {
+    font-size: 22px;
+    margin: 0;
+    color: #0b3d91;
+}
+
+.subtitle {
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+/* Info */
+.info-table {
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.info-label {
+    color: #64748b;
+    width: 180px;
+    padding: 6px 0;
+}
+
+.info-value {
+    font-weight: 600;
+}
+
+/* Table */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.table th {
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #64748b;
+    padding: 10px 6px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.table td {
+    padding: 12px 6px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.right {
+    text-align: right;
+}
+.th-right {
+    text-align: right !important;
+}
+
+/* Total */
+.total-box {
+    margin-top: 30px;
+    width: 100%;
+}
+
+.total-row {
+    border-top: 2px solid #0b3d91;
+}
+
+.total-label {
+    padding: 14px 6px;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.total-value {
+    padding: 14px 6px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #0b3d91;
+}
+
+/* Footer */
+.footer {
+    margin-top: 60px;
+    font-size: 11px;
+    color: #94a3b8;
+    text-align: center;
+}
+
+.footer a {
+    color: #0b3d91;
+    text-decoration: none;
+}
 
     </style>
 </head>
 <body>
 
+
+<div class="watermark">
+    <img src="{{ public_path('logo.png')}}">
+    <h1 style="text-align: center;">Projektkalkulation</h1>
+    <h2 style="text-align: center;">Unverbindliche Kostenschätzung</h2>
+</div>
     <!-- Header Grid -->
-    <table class="header-layout">
+   <div class="header">
+    <table class="header-table">
         <tr>
-            <td class="company-info">
-                <img src="{{ asset('logo.png') }}" class="logo-img" alt="agentur-77 Logo">
-                <p><strong>Webdesign & Digitalisierung</strong></p>
-                <p>Bloherfelder Str. 71</p>
-                <p>26129 Oldenburg</p>
-                <p>Telefon: 0441 18018566</p>
-                <p>E-Mail: info@agentur-77.de</p>
+            <td>
+                <img src="{{ public_path('logo.png') }}" class="logo">
+                <div class="company">
+                    Webdesign & Digitalisierung<br>
+                    Bloherfelder Str. 71<br>
+                    26129 Oldenburg<br>
+                    0441 18018566<br>
+                    info@agentur-77.de
+                </div>
             </td>
-            <td class="logo-container">
-                
+
+            <td style="text-align:right;">
+                <div class="subtitle">Angebotsnummer</div>
+                <div><strong>{{ $inquiry->quote_number }}</strong></div>
+
+                <div class="subtitle" style="margin-top:10px;">Datum</div>
+                <div>{{ $inquiry->created_at->format('d.m.Y') }}</div>
             </td>
         </tr>
     </table>
+</div>
    
     <!-- Title Bar -->
-    <div class="title-bar">
-        <h2 style="text-align: center;">Unverbindliche Kostenschätzung</h2>
-    </div>
+    <div class="title">
+    <h1>Projektkalkulation</h1>
+    <div class="subtitle">Unverbindliche Kostenschätzung</div>
+</div>
 
     <!-- Inquiry Info -->
-    <table class="info-block">
+    <table class="table">
+    <thead>
         <tr>
-            <td class="info-label">Angebotsnummer:</td>
-            <td><strong>{{ $inquiry->quote_number }}</strong></td>
-            <td class="info-label" style="text-align: right; width: 100px;">Datum:</td>
-            <td style="text-align: right;">{{ $inquiry->created_at->format('d.m.Y') }}</td>
+            <th style="width:45%">Leistung</th>
+            <th style="width:30%">Auswahl</th>
+            <th class="th-right" style="width:25%">Preis (€)</th>
         </tr>
-    </table>
-
-    <!-- Items Table -->
-    <table class="items-table">
-        <thead>
-            <tr>
-                <th style="width: 45%;">Leistung / Modul</th>
-                <th style="width: 30%;">Ihre Auswahl</th>
-                <th class="align-right" style="width: 25%;">Preis (€)</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($inquiry->items as $item)
-            <tr>
-                <td>{{ $item->priceModule ? $item->priceModule->label_de : 'Unbekanntes Modul' }}</td>
-                <td>{{ $item->customer_choice ?? ($item->quantity > 1 ? $item->quantity . ' Stück' : 'Ja') }}</td>
-                <td class="align-right">{{ number_format($item->price_at_time * $item->quantity, 2, ',', '.') }}</td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+    </thead>
+    <tbody>
+        @foreach($inquiry->items as $item)
+        <tr>
+            <td>{{ $item->priceModule ? $item->priceModule->label_de : '-' }}</td>
+            <td>{{ $item->customer_choice ?? ($item->quantity > 1 ? $item->quantity . 'x' : 'Ja') }}</td>
+            <td class="right">
+                {{ number_format($item->price_at_time * $item->quantity, 2, ',', '.') }}
+            </td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
 
     <!-- Totals -->
-    <table class="total-wrapper">
-        <tr class="total-row-highlight">
-            <td class="total-label" style="width: 75%; text-align: left;">Gesamtsumme (Brutto):</td>
-            <td class="total-value align-right" style="width: 25%;">{{ number_format($inquiry->total_estimated_price, 2, ',', '.') }} €</td>
-        </tr>
-    </table>
+    <table class="total-box">
+    <tr class="total-row">
+        <td class="total-label">Gesamtsumme</td>
+        <td class="total-value right">
+            {{ number_format($inquiry->total_estimated_price, 2, ',', '.') }} €
+        </td>
+    </tr>
+</table>
 
     <!-- Footer -->
     <div class="footer">
-        <p>Dies ist eine automatisch generierte, unverbindliche Kostenschätzung und stellt kein bindendes Angebot dar.</p>
-        <a href="https://www.agentur-77.de/designvorschlag/#kontakt" style="color: #060607ff; text-decoration: none;">Für dieses Projekt einen kostenfreien Design­vorschlag oder ein Angebot anfordern</a>
-    </div>
+    Diese Kalkulation ist unverbindlich und dient zur Orientierung.<br>
+    <a href="https://www.agentur-77.de/designvorschlag/#kontakt">
+        Kostenlosen Designvorschlag anfordern
+    </a>
+</div>
 
 </body>
 </html>

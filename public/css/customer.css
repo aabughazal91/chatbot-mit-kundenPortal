@@ -1,0 +1,38 @@
+/* ===== Customer Layout Styles ===== */
+
+body {
+  background-color: #f4f6f9;
+}
+
+/* Sidebar */
+.sidebar {
+  height: 100vh;
+  background-color: #09090a;
+  color: #fff;
+  padding-top: 20px;
+}
+
+.sidebar a {
+  color: #adb5bd;
+  text-decoration: none;
+  padding: 10px 20px;
+  display: block;
+  transition: 0.2s;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+  color: #fff;
+  background-color: #495057;
+}
+
+/* Navbar */
+.navbar-custom {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* Content */
+.content {
+  padding: 20px;
+}

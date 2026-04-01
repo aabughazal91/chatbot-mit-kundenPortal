@@ -17,6 +17,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::patch('/inquiries/{inquiry}/status', [InquiryController::class, 'updateStatus'])->name('inquiries.updateStatus');
     Route::patch('/inquiries/{inquiry}/clickup', [InquiryController::class, 'updateClickUp'])->name('inquiries.updateClickUp');
     Route::patch('/inquiries/{inquiry}/project-name', [InquiryController::class, 'updateProjectName'])->name('inquiries.updateProjectName');
+    Route::patch('/inquiries/{inquiry}/items/{item}/price', [InquiryController::class, 'updateItemPrice'])->name('inquiries.updateItemPrice');
     Route::delete('/inquiries/{inquiry}', [InquiryController::class, 'destroy'])->name('inquiries.destroy');
 
     // Price Module routes

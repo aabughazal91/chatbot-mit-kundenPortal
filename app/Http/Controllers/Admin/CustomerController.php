@@ -69,7 +69,7 @@ class CustomerController extends Controller
             'street' => 'nullable|string|max:255',
             'zip' => 'nullable|string|max:255',
             'city' => 'nullable|string|max:255',
-            'role' => ['required', Rule::in(['admin', 'customer', 'kunde'])],
+            'role' => ['required', Rule::in(['admin', 'customer'])],
             'is_confirmed' => 'nullable|boolean',
         ]);
 

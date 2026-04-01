@@ -99,7 +99,19 @@ class ChatBotController extends Controller
         $nextModule = $modules[$stepIndex];
         $nextStep = $this->transformModuleToStep($nextModule);
 
-        $botMsg = 'Verstanden. ' . $nextStep['question'];
+        $transitions = [
+            'Verstanden! ',
+            'Alles klar! ',
+            'Perfekt, weiter geht\'s! ',
+            'Super, danke! ',
+            'Gut, nächste Frage: ',
+            'Toll! ',
+            'Prima! Weiter: ',
+            'Sehr gut! ',
+            'Danke für Ihre Antwort! ',
+            'Notiert! ',
+        ];
+        $botMsg = $transitions[array_rand($transitions)] . $nextStep['question'];
         if (!empty($nextStep['description'])) {
             $botMsg .= "\n<span style=\"color: #666; font-size: 0.9em;\"><i>" . $nextStep['description'] . "</i></span>";
         }
@@ -305,8 +317,8 @@ class ChatBotController extends Controller
         }
 
         return response()->json([
-            'bot' => 'Vielen Dank! Ihre Schätzung: **' . number_format($totalEstimate, 2, ',', '.') . " €**\n"
-                . "Nummer: **{$quoteNumber}**",
+            'bot' => "Vielen Dank!\nIhre Schätzung: ** " . number_format($totalEstimate, 2, ',', '.') . " €**\n"
+                . "Angebot Nummer: **{$quoteNumber}**",
             'done' => true,
             'pdf_url' => route('chatbot.pdf', ['quote' => $quoteNumber]),
         ]);
@@ -326,8 +338,6 @@ class ChatBotController extends Controller
             'progress' => 0,
         ]);
     }
-
-    // ... (دوال الـ parseNumber و parseBoolean تبقى كما هي في كودك الأصلي)
 
     private function parseNumber(array $step, string $msg): array
     {
@@ -394,12 +404,12 @@ class ChatBotController extends Controller
             ->where('quote_number', $quoteNumber)
             ->firstOrFail();
 
-        // Temporarily commented out for testing HTML/CSS
-        // $pdf = app('dompdf.wrapper');
-        // $pdf->loadView('pdf.quote', compact('inquiry'));
-        // return $pdf->download("angebot-{$quoteNumber}.pdf");
+       // Temporarily commented out for testing HTML/CSS
+        $pdf = app('dompdf.wrapper');
+        $pdf->loadView('pdf.quote', compact('inquiry'));
+        return $pdf->download("angebot-{$quoteNumber}.pdf");
 
-        // Just for rapid CSS testing:
-        return view('pdf.quote', compact('inquiry'));
+        // for rapid CSS testing:
+        // return view('pdf.quote', compact('inquiry'));
     }
 }

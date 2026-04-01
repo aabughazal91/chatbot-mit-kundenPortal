@@ -1,1 +1,1 @@
-<img src="{{ asset('logo.png') }}" alt="agentur-77" class="w-60h-20 fill-current text-grey-500">
+<img src="{{ asset('logo-white.png') }}" alt="agentur-77" style=" height: auto; max-width: 250px;">

@@ -14,13 +14,13 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table">
+                    <table class="table w-100">
                         <thead class="table-light">
                             <tr>
 
                                 <th>Modul</th>
                                 <th>Kundenwahl</th>
-                                <th class="text-center">Menge</th>
+                                <th> </th>
                                 <th class="text-end">Preis (Einzeln)</th>
                                 <th class="text-end">Summe</th>
                             </tr>
@@ -30,7 +30,7 @@
                             <tr>
                                 <td>{{ $item->priceModule ? $item->priceModule->label_de : 'Unbekannt (Gelöscht)' }}</td>
                                 <td>{{ $item->customer_choice ?? ($item->quantity > 1 ? $item->quantity . ' Stück' : 'Ja') }}</td>
-                                <td class="text-center">{{ $item->quantity }}</td>
+                                <td class="text-center"></td>
                                 <td class="text-end">
                                     <form action="{{ route('admin.inquiries.updateItemPrice', [$inquiry, $item]) }}" method="POST" class="d-inline-flex align-items-center gap-1 justify-content-end">
                                         @csrf

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-bs-theme="dark">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,22 +7,18 @@
 
         <title>{{ config('app.name', 'Login') }}</title>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
         <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased bg-black text-white">
-    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-black">
-        <div>
+    <body class="bg-dark text-white">
+    <div class="min-vh-100 d-flex flex-column justify-content-center align-items-center pt-5 bg-dark">
+        <div class="mb-4">
             <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-400" />
+                <x-application-logo />
             </a>
         </div>
 
-        <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-gray-800 text-white shadow-md overflow-hidden sm:rounded-lg">
+        <div class="w-100 px-4 py-4 bg-dark border border-secondary text-white shadow rounded" style="max-width: 450px;">
             {{ $slot }}
         </div>
     </div>

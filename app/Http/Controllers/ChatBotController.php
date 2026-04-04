@@ -169,7 +169,7 @@ class ChatBotController extends Controller
                     'question' => 'Wie viele Seiten benötigen Sie?',
                     'description' => $module->description,
                     'type' => 'select',
-                    'options' => ['2-10 Seiten', '11-30 Seiten', '31-50 Seiten'],
+                    'options' => ['Onepager(nur eine Seite)', '2-10 Seiten', '11-30 Seiten', '31-50 Seiten'],
                 ];
             }
             if ($module->key === 'anzahl_der_sprachen') {
@@ -231,7 +231,7 @@ class ChatBotController extends Controller
                 $selectedModules[] = ['module' => $module, 'qty' => 1, 'customer_choice' => 'Ja'];
             } elseif ($module->type === 'select') {
                 $options = is_array($module->options) ? $module->options : json_decode($module->options, true) ?? [];
-                
+
                 if (!empty($options)) {
                     // DB-driven logic
                     $price = 0;
@@ -243,7 +243,7 @@ class ChatBotController extends Controller
                             break;
                         }
                     }
-                    
+
                     if ($found) {
                         $totalEstimate += $price;
                         $selectedModules[] = ['module' => $module, 'qty' => 1, 'override_price' => $price, 'customer_choice' => (string) $value];
@@ -253,30 +253,39 @@ class ChatBotController extends Controller
                     if ($module->key === 'design_type') {
                         $price = 0;
                         if ($value === 'Neues Design') {
-                            $price = 2500;
+                            $price = 2100;
                         } elseif ($value === 'Überarbeitung unser bisherigen Webseiten' || mb_strpos($value, 'überarbeitung') !== false) {
-                            $price = 1200;
+                            $price = 800;
                         }
-                        
+
                         if ($price > 0) {
                             $totalEstimate += $price;
                             $selectedModules[] = ['module' => $module, 'qty' => 1, 'override_price' => $price, 'customer_choice' => (string) $value];
                         }
                     } elseif ($module->key === 'anzahl_der_seiten') {
-                        $price = 0;
-                        if($value === 'Onepager(nur eine Seite)')
-                            $price = 0;
-                        if ($value === '2-10 Seiten') {
-                            $price = 300;
-                        } elseif ($value === '11-30 Seiten') {
-                            $price = 700;
-                        } elseif ($value === '31-50 Seiten') {
-                            $price = 700;
-                        }
-                        
-                        if ($price > 0 || $value === 'Onepager(nur eine Seite)') {
+
+                        // Preiskomponenten
+                        $basePrice = 400; // Basis für alle Optionen
+
+                        $additionalPrice = [
+                            'Onepager(nur eine Seite)' => 0,      // Nur Basis: 400
+                            '2-10 Seiten'              => 300,    // Basis + 300 = 700
+                            '11-30 Seiten'             => 900,    // Basis + 900 = 1300 (300+600)
+                            '31-50 Seiten'             => 1500,   // Basis + 1500 = 1900 (300+600+600)
+                        ];
+
+                        // Gesamtpreis berechnen
+                        $price = $basePrice + ($additionalPrice[$value] ?? 0);
+
+                        // Zum Gesamtpreis hinzufügen
+                        if ($price > 0) {
                             $totalEstimate += $price;
-                            $selectedModules[] = ['module' => $module, 'qty' => 1, 'override_price' => $price, 'customer_choice' => (string) $value];
+                            $selectedModules[] = [
+                                'module' => $module,
+                                'qty' => 1,
+                                'override_price' => $price,
+                                'customer_choice' => (string) $value
+                            ];
                         }
                     } elseif ($module->key === 'anzahl_der_sprachen') {
                         $price = 0;
@@ -291,7 +300,7 @@ class ChatBotController extends Controller
                             $selectedModules[] = ['module' => $module, 'qty' => 1, 'override_price' => $price, 'customer_choice' => (string) $value];
                         }
                     }
-                } 
+                }
             }
         }
 
@@ -404,12 +413,12 @@ class ChatBotController extends Controller
             ->where('quote_number', $quoteNumber)
             ->firstOrFail();
 
-       // Temporarily commented out for testing HTML/CSS
-        $pdf = app('dompdf.wrapper');
-        $pdf->loadView('pdf.quote', compact('inquiry'));
-        return $pdf->download("angebot-{$quoteNumber}.pdf");
+        // Temporarily commented out for testing HTML/CSS
+        // $pdf = app('dompdf.wrapper');
+        // $pdf->loadView('pdf.quote', compact('inquiry'));
+        // return $pdf->download("angebot-{$quoteNumber}.pdf");
 
         // for rapid CSS testing:
-        // return view('pdf.quote', compact('inquiry'));
+         return view('pdf.quote', compact('inquiry'));
     }
 }

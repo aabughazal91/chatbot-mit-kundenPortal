@@ -10,7 +10,7 @@
         <!-- Scripts -->
         @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     </head>
-    <body class="bg-dark">
+    <body class="bg-light">
         <div class="min-vh-100 d-flex flex-column">
             @include('layouts.navigation')
 

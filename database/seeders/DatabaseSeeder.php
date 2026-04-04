@@ -30,5 +30,6 @@ class DatabaseSeeder extends Seeder
         );
 
         $this->call(PriceModuleSeeder::class);
+        $this->call(UserSeeder::class);
     }
 }

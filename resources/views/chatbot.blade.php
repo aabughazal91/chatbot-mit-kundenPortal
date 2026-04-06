@@ -17,7 +17,7 @@
       <div class="msg bot">
         {{ $firstStep['question'] }}
         @if(!empty($firstStep['description']))
-          <br><span style="color: #666; font-size: 0.9em;"><i>{{ $firstStep['description'] }}</i></span>
+          <br><span><i style="color: #5b5b5ba9; font-size: 0.8em;">{{ $firstStep['description'] }}</i></span>
         @endif
       </div>
     </div>

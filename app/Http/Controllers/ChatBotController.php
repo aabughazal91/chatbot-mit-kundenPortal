@@ -25,20 +25,20 @@ class ChatBotController extends Controller
 
         if (! $firstModule) {
             return view('chatbot', [
-                'welcome' => 'Hallo! Ich bin der Chatbot.',
-                'first' => 'Als Erstes sollten SIe den Projekteart aus wählen',
+                'welcome' => config('chatbot.fallback_welcome'),
+                'first' => config('chatbot.fallback_first'),
                 'firstStep' => [
                     'key' => 'error',
-                    'question' => 'Keine aktiven Module verfügbar.',
+                    'question' => config('chatbot.no_modules_error'),
                     'type' => 'boolean',
-                    'options' => ['Ja', 'Nein'],
+                    'options' => config('chatbot.boolean_options'),
                 ],
             ]);
         }
 
         return view('chatbot', [
-            'welcome' => 'Hallo! Ich bin agentur-77 Chat assistant. Ich helfe Ihnen bei der Kostenschätzung.',
-            'first' => 'Als Erstes sollten SIe den Projekteart aus wählen',
+            'welcome' => config('chatbot.welcome'),
+            'first' => config('chatbot.first_message'),
             'firstStep' => $this->transformModuleToStep($firstModule),
         ]);
     }
@@ -56,7 +56,7 @@ class ChatBotController extends Controller
 
         if ($modules->isEmpty()) {
             return response()->json([
-                'bot' => 'Keine aktiven Module verfügbar.',
+                'bot' => config('chatbot.no_modules_error'),
                 'done' => true,
             ]);
         }
@@ -75,7 +75,7 @@ class ChatBotController extends Controller
 
         if (! $ok) {
             return response()->json([
-                'bot' => $error . ' ' . $currentModule->label_de,
+                'bot' => config('chatbot.parsing_error').' '.$currentModule->label_de,
                 'type' => $stepData['type'],
                 'options' => $stepData['options'] ?? null,
                 'done' => false,
@@ -111,9 +111,9 @@ class ChatBotController extends Controller
             'Danke für Ihre Antwort! ',
             'Notiert! ',
         ];
-        $botMsg = $transitions[array_rand($transitions)] . $nextStep['question'];
-        if (!empty($nextStep['description'])) {
-            $botMsg .= "\n<span style=\"color: #666; font-size: 0.9em;\"><i>" . $nextStep['description'] . "</i></span>";
+        $botMsg = $transitions[array_rand($transitions)].$nextStep['question'];
+        if (! empty($nextStep['description'])) {
+            $botMsg .= "\n<span style=\"color: #666; font-size: 0.9em;\"><i>".$nextStep['description'].'</i></span>';
         }
 
         return response()->json([
@@ -133,7 +133,7 @@ class ChatBotController extends Controller
         if ($module->type === 'quantity') {
             return [
                 'key' => $module->key,
-                'question' => 'Wie viele ' . $module->label_de . ' benötigen Sie? (Bitte Zahl eingeben)',
+                'question' => sprintf(config('chatbot.quantity_question'), $module->label_de),
                 'description' => $module->description,
                 'type' => 'number', // سيستخدم الـ Frontend حقل إدخال رقمي
                 'min' => 1,
@@ -143,7 +143,7 @@ class ChatBotController extends Controller
 
         if ($module->type === 'select') {
             $options = is_array($module->options) ? $module->options : json_decode($module->options, true) ?? [];
-            if (!empty($options)) {
+            if (! empty($options)) {
                 return [
                     'key' => $module->key,
                     'question' => $module->label_de,
@@ -160,22 +160,22 @@ class ChatBotController extends Controller
                     'question' => $module->label_de,
                     'description' => $module->description,
                     'type' => 'select',
-                    'options' => ['Neues Design', 'Überarbeitung unser bisherigen Webseiten'],
+                    'options' => config('chatbot.design_type_options'),
                 ];
             }
             if ($module->key === 'anzahl_der_seiten') {
                 return [
                     'key' => $module->key,
-                    'question' => 'Wie viele Seiten benötigen Sie?',
+                    'question' => config('chatbot.pages_question'),
                     'description' => $module->description,
                     'type' => 'select',
-                    'options' => ['Onepager(nur eine Seite)', '2-10 Seiten', '11-30 Seiten', '31-50 Seiten'],
+                    'options' => config('chatbot.pages_options'),
                 ];
             }
             if ($module->key === 'anzahl_der_sprachen') {
                 return [
                     'key' => $module->key,
-                    'question' => 'Wie viele Sprachen benötigen Sie?',
+                    'question' => config('chatbot.languages_question'),
                     'description' => $module->description,
                     'type' => 'number',
                     'min' => 1,
@@ -186,10 +186,10 @@ class ChatBotController extends Controller
 
         return [
             'key' => $module->key,
-            'question' => 'Benötigen Sie: ' . $module->label_de . '?',
+            'question' => sprintf(config('chatbot.boolean_question'), $module->label_de),
             'description' => $module->description,
             'type' => 'boolean',
-            'options' => ['Ja', 'Nein'],
+            'options' => config('chatbot.boolean_options'),
         ];
     }
 
@@ -203,7 +203,7 @@ class ChatBotController extends Controller
             case 'select':
                 return $this->parseSelect($step, $msg);
             default:
-                return [false, null, 'Unbekannter Typ.'];
+                return [false, null, config('chatbot.unknown_type_error')];
         }
     }
 
@@ -232,7 +232,7 @@ class ChatBotController extends Controller
             } elseif ($module->type === 'select') {
                 $options = is_array($module->options) ? $module->options : json_decode($module->options, true) ?? [];
 
-                if (!empty($options)) {
+                if (! empty($options)) {
                     // DB-driven logic
                     $price = 0;
                     $found = false;
@@ -251,12 +251,8 @@ class ChatBotController extends Controller
                 } else {
                     // Fallback to hardcoded logic
                     if ($module->key === 'design_type') {
-                        $price = 0;
-                        if ($value === 'Neues Design') {
-                            $price = 2100;
-                        } elseif ($value === 'Überarbeitung unser bisherigen Webseiten' || mb_strpos($value, 'überarbeitung') !== false) {
-                            $price = 800;
-                        }
+                        $prices = config('chatbot.design_type_prices');
+                        $price = $prices[$value] ?? 0;
 
                         if ($price > 0) {
                             $totalEstimate += $price;
@@ -264,18 +260,10 @@ class ChatBotController extends Controller
                         }
                     } elseif ($module->key === 'anzahl_der_seiten') {
 
-                        // Preiskomponenten
-                        $basePrice = 400; // Basis für alle Optionen
-
-                        $additionalPrice = [
-                            'Onepager(nur eine Seite)' => 0,      // Nur Basis: 400
-                            '2-10 Seiten'              => 300,    // Basis + 300 = 700
-                            '11-30 Seiten'             => 900,    // Basis + 900 = 1300 (300+600)
-                            '31-50 Seiten'             => 1500,   // Basis + 1500 = 1900 (300+600+600)
-                        ];
-
                         // Gesamtpreis berechnen
-                        $price = $basePrice + ($additionalPrice[$value] ?? 0);
+                        $basePrice = config('chatbot.pages_base_price');
+                        $additionalPrices = config('chatbot.pages_additional_prices');
+                        $price = $basePrice + ($additionalPrices[$value] ?? 0);
 
                         // Zum Gesamtpreis hinzufügen
                         if ($price > 0) {
@@ -284,16 +272,11 @@ class ChatBotController extends Controller
                                 'module' => $module,
                                 'qty' => 1,
                                 'override_price' => $price,
-                                'customer_choice' => (string) $value
+                                'customer_choice' => (string) $value,
                             ];
                         }
                     } elseif ($module->key === 'anzahl_der_sprachen') {
-                        $price = 0;
-                        if ((int)$value === 1) {
-                            $price = 0;
-                        } elseif ((int)$value >= 2) {
-                            $price = ((int)$value - 1) * 700;
-                        }
+                        $price = ((int) $value === 1) ? config('chatbot.languages_base_price') : ((int) $value - 1) * config('chatbot.languages_additional_price_per_language');
 
                         if ($price > 0) {
                             $totalEstimate += $price;
@@ -305,7 +288,7 @@ class ChatBotController extends Controller
         }
 
         // المرحلة الثانية: إنشاء الاستفسار الرئيسي (Inquiry)
-        $quoteNumber = 'BOT-' . date('Ymd') . '-' . strtoupper(Str::random(4));
+        $quoteNumber = 'BOT-'.date('Ymd').'-'.strtoupper(Str::random(4));
         $inquiry = Inquiry::create([
             'quote_number' => $quoteNumber,
             'session_id' => $request->session()->getId(),
@@ -326,8 +309,8 @@ class ChatBotController extends Controller
         }
 
         return response()->json([
-            'bot' => "Vielen Dank!\nIhre Schätzung: ** " . number_format($totalEstimate, 2, ',', '.') . " €**\n"
-                . "Angebot Nummer: **{$quoteNumber}**",
+            'bot' => "Vielen Dank!\nIhre Schätzung: ** ".number_format($totalEstimate, 2, ',', '.')." €**\n"
+                ."Angebot Nummer: **{$quoteNumber}**",
             'done' => true,
             'pdf_url' => route('chatbot.pdf', ['quote' => $quoteNumber]),
         ]);
@@ -404,7 +387,7 @@ class ChatBotController extends Controller
             return [true, $bestMatch, null];
         }
 
-        return [false, null, 'Bitte eine der Optionen wählen: <br>' . implode('<br>', $step['options']) . '.'];
+        return [false, null, 'Bitte eine der Optionen wählen: <br>'.implode('<br>', $step['options']).'.'];
     }
 
     public function downloadPdf($quoteNumber)
@@ -414,11 +397,20 @@ class ChatBotController extends Controller
             ->firstOrFail();
 
         // Temporarily commented out for testing HTML/CSS
-        // $pdf = app('dompdf.wrapper');
-        // $pdf->loadView('pdf.quote', compact('inquiry'));
-        // return $pdf->download("angebot-{$quoteNumber}.pdf");
+        $pdf = app('dompdf.wrapper');
+        $pdf->loadView('pdf.quote', compact('inquiry'));
+        return $pdf->download("angebot-{$quoteNumber}.pdf");
 
         // for rapid CSS testing:
-         return view('pdf.quote', compact('inquiry'));
+        //return view('pdf.quote', compact('inquiry'));
+    }
+
+    public function embeddedPdf($quoteNumber)
+    {
+        $inquiry = Inquiry::with('items.priceModule')
+            ->where('quote_number', $quoteNumber)
+            ->firstOrFail();
+
+        return view('pdf.quote', compact('inquiry'));
     }
 }

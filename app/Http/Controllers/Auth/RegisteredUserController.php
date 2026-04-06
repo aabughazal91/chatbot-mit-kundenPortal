@@ -30,21 +30,32 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'name'              => ['required', 'string', 'max:255'],
+            'username'          => ['nullable', 'string', 'max:255', 'unique:users,username'],
+            'email'             => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class, 'confirmed'],
+            'email_confirmation' => ['required', 'string', 'email'],
+            'password'          => ['required', 'confirmed', Rules\Password::defaults()],
+            'company'           => ['nullable', 'string', 'max:255'],
+            'phone'             => ['nullable', 'string', 'max:50'],
+            'street'            => ['nullable', 'string', 'max:255'],
+            'zip'               => ['nullable', 'string', 'max:20'],
         ]);
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
+            'name'     => $request->name,
+            'username' => $request->username,
+            'email'    => $request->email,
             'password' => Hash::make($request->password),
+            'company'  => $request->company,
+            'phone'    => $request->phone,
+            'street'   => $request->street,
+            'zip'      => $request->city ?? $request->zip,
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('login', absolute: false));
     }
 }

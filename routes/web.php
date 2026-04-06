@@ -1,14 +1,11 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ChatBotController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\ChatBotController;
 use App\Http\Controllers\Customer\DashboardController as CustomerDashboardController;
-use Illuminate\Support\Facades\Route;
-use App\Mail\WelcomeCustomerMail;
-use App\Models\User;
-use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
@@ -17,6 +14,7 @@ Route::get('/', function () {
 Route::get('/chatbot', [ChatBotController::class, 'show'])->name('chatbot.show');
 Route::post('/chatbot/message', [ChatBotController::class, 'message'])->name('chatbot.message');
 Route::get('/chatbot/pdf/{quote}', [ChatBotController::class, 'downloadPdf'])->name('chatbot.pdf');
+Route::get('/chatbot/pdf/{quote}/embedded', [ChatBotController::class, 'embeddedPdf'])->name('chatbot.pdf.embedded');
 
 Route::get('/dashboard', function () {
     if (Auth::user()->role === 'admin') {
@@ -28,12 +26,12 @@ Route::get('/dashboard', function () {
 
 // Admin dashboard route
 Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])
-    ->middleware(['auth', 'admin'])
+    ->middleware(['auth', 'verified', 'admin'])
     ->name('admin.dashboard');
 
-// Customer dashboard route  
+// Customer dashboard route
 Route::get('/customer/dashboard', [CustomerDashboardController::class, 'index'])
-    ->middleware(['auth', 'customer'])
+    ->middleware(['auth', 'verified', 'customer'])
     ->name('customer.dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -42,7 +40,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
-require __DIR__ . '/auth.php';
-require __DIR__ . '/admin.php';
-require __DIR__ . '/customer.php';
+require __DIR__.'/auth.php';
+require __DIR__.'/admin.php';
+require __DIR__.'/customer.php';

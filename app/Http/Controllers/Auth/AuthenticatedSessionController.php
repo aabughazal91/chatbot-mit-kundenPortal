@@ -39,8 +39,7 @@ class AuthenticatedSessionController extends Controller
         ]);
     }
 
-    // 4. التحقق من أن الحساب مؤكد (is_confirmed)
-    // هذا الجزء مهم جداً لمشروعك لضمان أن الأدمن قد وافق على العميل
+    // User Confirmation
     if (! Auth::user()->is_confirmed) {
         Auth::logout();
         return redirect()->route('login')->with('error', 'Ihr Konto wurde noch nicht aktiviert.');

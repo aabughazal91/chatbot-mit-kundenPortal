@@ -1,0 +1,106 @@
+
+    .register-card {
+        max-width: 640px !important;
+        background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%) !important;
+        border: 1px solid rgba(99, 102, 241, 0.25) !important;
+        border-radius: 1rem !important;
+        box-shadow: 0 25px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04) !important;
+    }
+    .register-title {
+        font-size: 1.6rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #a78bfa, #60a5fa);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -0.5px;
+    }
+    .register-subtitle {
+        font-size: 0.85rem;
+        color: #6b7280;
+    }
+    .section-label {
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #6366f1;
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.4rem;
+        border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+    }
+    .form-label {
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: #9ca3af;
+        margin-bottom: 0.35rem;
+    }
+    .form-control, .form-control:focus {
+        background-color: rgba(255,255,255,0.04) !important;
+        border: 1px solid rgba(255,255,255,0.1) !important;
+        color: #e5e7eb !important;
+        border-radius: 0.5rem !important;
+        font-size: 0.9rem;
+        padding: 0.55rem 0.85rem;
+        transition: all 0.2s ease;
+        box-shadow: none !important;
+    }
+    .form-control:focus {
+        border-color: rgba(99, 102, 241, 0.6) !important;
+        background-color: rgba(99, 102, 241, 0.06) !important;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15) !important;
+    }
+    .form-control::placeholder {
+        color: #4b5563;
+    }
+    .badge-optional {
+        font-size: 0.65rem;
+        font-weight: 500;
+        color: #4b5563;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 4px;
+        padding: 2px 6px;
+        vertical-align: middle;
+    }
+    .btn-register {
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        border: none;
+        border-radius: 0.5rem;
+        color: white;
+        font-weight: 600;
+        font-size: 0.9rem;
+        padding: 0.6rem 1.8rem;
+        letter-spacing: 0.3px;
+        transition: all 0.25s ease;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+    }
+    .btn-register:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+        color: white;
+    }
+    .btn-register:active {
+        transform: translateY(0);
+    }
+    .login-link {
+        font-size: 0.82rem;
+        color: #6b7280;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    .login-link:hover {
+        color: #a78bfa;
+    }
+    .input-icon-wrapper {
+        position: relative;
+    }
+    .input-icon {
+        position: absolute;
+        right: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #4b5563;
+        font-size: 0.85rem;
+        pointer-events: none;
+    }

@@ -56,12 +56,11 @@ body {
 
 /* Title */
 .title {
-    margin-top:30px
+    margin-top:30px;
+    align-items: center;
 }
 
 .title h1 {
-    font-size: 22px;
-    margin: 0;
     color: #0b3d91;
 }
 
@@ -157,8 +156,8 @@ body {
 
 <div class="watermark">
     <img src="{{ public_path('logo.png')}}">
-    <h1 style="text-align: center;">Projektkalkulation</h1>
-    <h2 style="text-align: center;">Unverbindliche Kostenschätzung</h2>
+    <h1 style="text-align: center;">Unverbindliche Kostenschätzung</h1>
+    
 </div>
     <!-- Header Grid -->
    <div class="header">
@@ -176,7 +175,7 @@ body {
             </td>
 
             <td style="text-align:right;">
-                <div class="subtitle">Angebotsnummer</div>
+                <div class="subtitle">Projekt</div>
                 <div><strong>{{ $inquiry->quote_number }}</strong></div>
 
                 <div class="subtitle" style="margin-top:10px;">Datum</div>
@@ -188,8 +187,8 @@ body {
    
     <!-- Title Bar -->
     <div class="title">
-    <h1>Projektkalkulation</h1>
-    <div class="subtitle">Unverbindliche Kostenschätzung</div>
+    <h1>Unverbindliche Kostenschätzung</h1>
+    
 </div>
 
     <!-- Inquiry Info -->

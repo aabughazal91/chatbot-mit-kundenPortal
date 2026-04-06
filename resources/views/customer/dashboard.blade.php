@@ -110,7 +110,7 @@
                             <th>Datum</th>
                             <th>Summe (Netto)</th>
                             <th>Status</th>
-                            <!-- <th class="text-end pe-4">Aktion</th> -->
+                            <th class="text-end pe-4">Aktion</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -128,11 +128,14 @@
                                     <span class="badge bg-secondary px-3">Archiviert</span>
                                 @endif
                             </td>
-                            <!-- <td class="text-end pe-4">
-                                <a href="{{ route('chatbot.pdf', $inq->quote_number) }}" class="btn btn-sm btn-outline-danger shadow-sm">
-                                    <i class="bi bi-file-earmark-pdf"></i> PDF-Angebot
+                            <td class="text-end pe-4">
+                                <button class="btn btn-sm btn-outline-primary shadow-sm me-1" data-bs-toggle="modal" data-bs-target="#pdfModal" data-quote="{{ $inq->quote_number }}">
+                                    <i class="bi bi-eye"></i> Anzeigen
+                                </button>
+                                <a href="{{ route('chatbot.pdf', $inq->quote_number) }}" class="btn btn-sm btn-outline-danger shadow-sm" target="_blank">
+                                    <i class="bi bi-file-earmark-pdf"></i> Download
                                 </a>
-                            </td> -->
+                            </td>
                         </tr>
                         @empty
                         <tr>
@@ -148,4 +151,40 @@
         </div>
     </div>
 </div>
+
+{{-- PDF Modal --}}
+<div class="modal fade" id="pdfModal" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pdfModalLabel">Angebot anzeigen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <iframe id="pdfFrame" src="" width="100%" height="600px" frameborder="0"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Schließen</button>
+                <a id="downloadBtn" href="" class="btn btn-danger" target="_blank">
+                    <i class="bi bi-file-earmark-pdf"></i> Download PDF
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var pdfModal = document.getElementById('pdfModal');
+    pdfModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var quoteNumber = button.getAttribute('data-quote');
+        var pdfUrl = '{{ url("/chatbot/pdf") }}/' + quoteNumber + '/embedded';
+        var downloadUrl = '{{ url("/chatbot/pdf") }}/' + quoteNumber;
+        
+        document.getElementById('pdfFrame').src = pdfUrl;
+        document.getElementById('downloadBtn').href = downloadUrl;
+    });
+});
+</script>
 @endsection

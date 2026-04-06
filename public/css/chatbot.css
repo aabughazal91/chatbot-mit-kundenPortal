@@ -139,9 +139,11 @@ body {
 .msg.bot {
   align-self: flex-start;
   background: #ffffff;
-  color: #334155;
+  color: #303742;
   border: 1px solid #f1f5f9;
   border-bottom-left-radius: 4px;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .msg.user {

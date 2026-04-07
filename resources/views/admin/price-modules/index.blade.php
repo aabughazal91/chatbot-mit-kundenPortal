@@ -55,7 +55,9 @@
                             <form action="{{ route('admin.price-modules.destroy', $module) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Wirklich löschen?');">
                                 @csrf
                                 @method('DELETE')
-                                {{-- ثم  --}}
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash"></i> Löschen
+                                </button>
                             </form>
                         </td>
                     </tr>

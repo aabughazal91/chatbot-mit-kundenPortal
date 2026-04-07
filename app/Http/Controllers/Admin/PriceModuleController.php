@@ -38,7 +38,6 @@ class PriceModuleController extends Controller
             'price' => 'required|numeric',
             'type' => 'required|in:boolean,quantity,select',
             'category' => 'nullable|string',
-            'is_active' => 'boolean',
             'options' => 'nullable|array',
             'options.*.label' => 'required_with:options|string',
             'options.*.price' => 'required_with:options|numeric',

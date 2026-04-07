@@ -17,7 +17,7 @@
       <div class="msg bot">
         {{ $firstStep['question'] }}
         @if(!empty($firstStep['description']))
-          <br><span><i style="color: #5b5b5ba9; font-size: 0.8em;">{{ $firstStep['description'] }}</i></span>
+          <br><span><i style="color: #6b6868a9; font-size: 0.9em;">{{ $firstStep['description'] }}</i></span>
         @endif
       </div>
     </div>
@@ -127,6 +127,9 @@ async function send() {
     downloadBtn.className = 'quick-reply-btn'; 
     downloadBtn.innerHTML = '📄 Kostenlose Kalkulation (PDF) herunterladen';
     downloadBtn.target = '_blank';
+    downloadBtn.style.animation = 'slideInUp 0.5s ease-out, pulse 2s infinite';
+    downloadBtn.style.marginTop = '20px';
+    downloadBtn.style.marginBottom = '10px';
     chat.appendChild(downloadBtn);
     scrollToBottom();
 }

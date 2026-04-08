@@ -175,7 +175,13 @@ body {
             </td>
 
             <td style="text-align:right;">
-                <div class="subtitle">Projekt</div>
+                <div class="subtitle">
+                    @if(Str::startsWith($inquiry->quote_number, 'BOT-'))
+                        Angebot-Nr
+                    @else
+                        Projekt
+                    @endif
+                </div>
                 <div><strong>{{ $inquiry->quote_number }}</strong></div>
 
                 <div class="subtitle" style="margin-top:10px;">Datum</div>
@@ -226,9 +232,12 @@ body {
     <!-- Footer -->
     <div class="footer">
     Diese Kalkulation ist unverbindlich und dient zur Orientierung.<br>
-    <a href="https://www.agentur-77.de/designvorschlag/#kontakt">
-        Kostenlosen Designvorschlag anfordern
+    
+    ** Für zukünftige fragen bitte angebotnummer angeben: <strong>{{ $inquiry->quote_number }}</strong> **<br>
+     <a href="https://www.agentur-77.de/designvorschlag/#kontakt">
+        Für eine detaillierte Beratung und ein maßgeschneidertes Angebot kontaktieren Sie uns gerne.
     </a>
+    
 </div>
 
 </body>

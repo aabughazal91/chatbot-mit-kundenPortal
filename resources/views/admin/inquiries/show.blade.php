@@ -134,7 +134,7 @@
         <!-- ClickUp Integration -->
         <div class="card shadow-sm border-secondary">
             <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
-                <h6 class="mb-0"><img src="https://clickup.com/landing/images/logo.svg" height="15" alt="ClickUp"> Integration</h6>
+                <h6 class="mb-0"> ClickUp Integration</h6>
             </div>
             <div class="card-body">
                 <form action="{{ route('admin.inquiries.updateClickUp', $inquiry) }}" method="POST">

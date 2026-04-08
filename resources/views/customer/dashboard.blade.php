@@ -61,7 +61,7 @@
         <div class="card-body">
             <div class="row align-items-center">
                 <div class="col-md-4">
-                    <p class="mb-1 text-muted">Projekt-Nr: <strong>{{ $activeInquiry->quote_number }}</strong></p>
+                    <p class="mb-1 text-muted">Projekt: <strong>{{ $activeInquiry->quote_number }}</strong></p>
                     <p class="mb-0">Status: 
                         <span class="badge rounded-pill bg-info text-dark">
                             {{ $activeInquiry->clickUpMapping->clickup_status_name }}

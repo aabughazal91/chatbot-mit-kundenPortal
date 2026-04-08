@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Customer Dashboard</title>
+    <title>Kunden Dashboard</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -42,7 +42,7 @@
             <!-- Navbar -->
             <nav class="navbar navbar-expand-lg navbar-light navbar-custom px-4 py-3">
                 <div class="container-fluid pl-0">
-                    <span class="navbar-brand mb-0 h1">@yield('header_title', 'Customer Dashboard')</span>
+                    <span class="navbar-brand mb-0 h1">@yield('header_title', 'Kunden Dashboard')</span>
                     <img src="{{ asset('logo.png') }}" alt="">
                     <div class="d-flex">
                         <span class="navbar-text">

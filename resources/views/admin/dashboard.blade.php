@@ -7,9 +7,7 @@
             <h1 class="h3 mb-0">Admin Dashboard</h1>
             <p class="text-muted mb-0">Übersicht über alle Anfragen und Statistiken</p>
         </div>
-        <div>
-            <span class="badge bg-primary">Admin</span>
-        </div>
+        
     </div>
 
     {{-- Statistics Cards --}}

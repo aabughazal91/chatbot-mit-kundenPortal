@@ -10,7 +10,7 @@
 <body>
   
   <div class="box">
-    <div class="header">agentur-77 Chatbot</div>
+    <div class="header">agentur-77 kostenrechner</div>
 
     <div id="chat" class="chat">
       <div class="msg bot">{{ $welcome }}</div>

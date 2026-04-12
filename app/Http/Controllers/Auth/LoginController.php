@@ -15,7 +15,7 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $loginField = $request->input('login'); // الحقل من الفورم (إيميل أو يوزرنيم)
+        $loginField = $request->input('login');         
         $fieldType = filter_var($loginField, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
         $credentials = $request->validate([

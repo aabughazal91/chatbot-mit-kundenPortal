@@ -5,7 +5,7 @@
 @section('content')
 <div class="card shadow-sm max-w-lg">
     <div class="card-header bg-white">
-        <h5 class="mb-0">{{ $module->exists ? 'Modul: ' . $module->label_de : 'Neues Preismodul anlegen' }}</h5>
+        <h5 class="mb-0">{{ $module->exists ? 'Modul: ' . $module->bezeichnung_de : 'Neues Preismodul anlegen' }}</h5>
     </div>
     <div class="card-body">
         
@@ -32,32 +32,32 @@
                     <div class="form-text">Z.B. 'cms_basic' oder 'seiten_zahl'. Darf keine Leerzeichen enthalten.</div>
                 </div>
                 <div class="col-md-6">
-                    <label for="category" class="form-label">Kategorie (Optional)</label>
-                    <input type="text" class="form-control" id="category" name="category" value="{{ old('category', $module->category ?? 'base') }}">
+                    <label for="kategorie" class="form-label">Kategorie (Optional)</label>
+                    <input type="text" class="form-control" id="kategorie" name="kategorie" value="{{ old('kategorie', $module->kategorie ?? 'base') }}">
                 </div>
             </div>
 
             <div class="mb-3">
-                <label for="label_de" class="form-label">Label (Angezeigt für Kunden)</label>
-                <input type="text" class="form-control" id="label_de" name="label_de" value="{{ old('label_de', $module->label_de) }}" required>
+                <label for="bezeichnung_de" class="form-label">Bezeichnung (Angezeigt für Kunden)</label>
+                <input type="text" class="form-control" id="bezeichnung_de" name="bezeichnung_de" value="{{ old('bezeichnung_de', $module->bezeichnung_de) }}" required>
             </div>
 
             <div class="mb-3">
-                <label for="description" class="form-label">Beschreibung (Optional)</label>
-                <textarea class="form-control" id="description" name="description" rows="2">{{ old('description', $module->description) }}</textarea>
+                <label for="beschreibung" class="form-label">Beschreibung (Optional)</label>
+                <textarea class="form-control" id="beschreibung" name="beschreibung" rows="2">{{ old('beschreibung', $module->beschreibung) }}</textarea>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <label for="price" class="form-label">Preis (€)</label>
-                    <input type="number" step="0.01" class="form-control" id="price" name="price" value="{{ old('price', $module->price) }}" required>
+                    <label for="preis" class="form-label">Preis (€)</label>
+                    <input type="number" step="0.01" class="form-control" id="preis" name="preis" value="{{ old('preis', $module->preis) }}" required>
                 </div>
                 <div class="col-md-6">
-                    <label for="type" class="form-label">Typ (Berechnungsart)</label>
-                    <select class="form-select" id="type" name="type" required>
-                        <option value="boolean" {{ old('type', $module->type) === 'boolean' ? 'selected' : '' }}>Fixpreis (Ja/Nein Frage)</option>
-                        <option value="quantity" {{ old('type', $module->type) === 'quantity' ? 'selected' : '' }}>Pro Einheit (Zahlen Eingabe)</option>
-                        <option value="select" {{ old('type', $module->type) === 'select' ? 'selected' : '' }}>Auswahl (Select/Optionen)</option>
+                    <label for="typ" class="form-label">Typ (Berechnungsart)</label>
+                    <select class="form-select" id="typ" name="typ" required>
+                        <option value="boolean" {{ old('typ', $module->typ) === 'boolean' ? 'selected' : '' }}>Fixpreis (Ja/Nein Frage)</option>
+                        <option value="quantity" {{ old('typ', $module->typ) === 'quantity' ? 'selected' : '' }}>Pro Einheit (Zahlen Eingabe)</option>
+                        <option value="select" {{ old('typ', $module->typ) === 'select' ? 'selected' : '' }}>Auswahl (Select/Optionen)</option>
                     </select>
                 </div>
             </div>
@@ -68,15 +68,15 @@
                 <h6>Optionen für "Auswahl"</h6>
                 <div id="options-list">
                     @php
-                        $options = old('options', $module->options ?? []);
+                        $options = old('optionen', $module->optionen ?? []);
                     @endphp
                     @foreach($options as $index => $option)
                         <div class="row mb-2 option-row">
                             <div class="col-md-5">
-                                <input type="text" class="form-control" name="options[{{$index}}][label]" value="{{ $option['label'] ?? '' }}" placeholder="Label (z.B. Wordpress)" required>
+                                <input type="text" class="form-control" name="optionen[{{$index}}][label]" value="{{ $option['label'] ?? '' }}" placeholder="Label (z.B. Wordpress)" required>
                             </div>
                             <div class="col-md-5">
-                                <input type="number" step="0.01" class="form-control" name="options[{{$index}}][price]" value="{{ $option['price'] ?? '' }}" placeholder="Preis (€)" required>
+                                <input type="number" step="0.01" class="form-control" name="optionen[{{$index}}][price]" value="{{ $option['price'] ?? '' }}" placeholder="Preis (€)" required>
                             </div>
                             <div class="col-md-2">
                                 <button type="button" class="btn btn-sm btn-danger remove-option mt-1">X</button>
@@ -94,8 +94,8 @@
                 </button>
             </div>
             <div class="mb-4 mt-4 form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="is_active" name="is_active" {{ old('is_active', $module->is_active ?? true) ? 'checked' : '' }}>
-                <label class="form-check-label" for="is_active">Modul ist Aktiv (wird im Chatbot angezeigt)</label>
+                <input class="form-check-input" type="checkbox" role="switch" id="ist_aktiv" name="ist_aktiv" {{ old('ist_aktiv', $module->ist_aktiv ?? true) ? 'checked' : '' }}>
+                <label class="form-check-label" for="ist_aktiv">Modul ist Aktiv (wird im Chatbot angezeigt)</label>
             </div>
         </form>
     </div>
@@ -103,17 +103,15 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const typeSelect = document.getElementById('type');
+        const typeSelect = document.getElementById('typ');
         const optionsContainer = document.getElementById('dynamic-options-container');
         const addOptionBtn = document.getElementById('add-option-btn');
         const optionsList = document.getElementById('options-list');
-        const priceInput = document.getElementById('price');
+        const priceInput = document.getElementById('preis');
         
         function toggleOptions() {
             if (typeSelect.value === 'select') {
                 optionsContainer.style.display = 'block';
-                // Force base price to 0 if select, as prices are in options? 
-                // Or leave base price for shared cost. 
             } else {
                 optionsContainer.style.display = 'none';
             }
@@ -122,17 +120,17 @@
         typeSelect.addEventListener('change', toggleOptions);
         toggleOptions();
 
-        let optionIndex = {{ count(old('options', $module->options ?? [])) }};
+        let optionIndex = {{ count(old('optionen', $module->optionen ?? [])) }};
 
         addOptionBtn.addEventListener('click', function() {
             const row = document.createElement('div');
             row.className = 'row mb-2 option-row';
             row.innerHTML = `
                 <div class="col-md-5">
-                    <input type="text" class="form-control" name="options[${optionIndex}][label]" placeholder="Label (z.B. Wordpress)" required>
+                    <input type="text" class="form-control" name="optionen[${optionIndex}][label]" placeholder="Label (z.B. Wordpress)" required>
                 </div>
                 <div class="col-md-5">
-                    <input type="number" step="0.01" class="form-control" name="options[${optionIndex}][price]" placeholder="Preis (€)" required>
+                    <input type="number" step="0.01" class="form-control" name="optionen[${optionIndex}][price]" placeholder="Preis (€)" required>
                 </div>
                 <div class="col-md-2">
                     <button type="button" class="btn btn-sm btn-danger remove-option mt-1">X</button>

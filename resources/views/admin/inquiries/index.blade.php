@@ -24,7 +24,7 @@
                 <tbody>
                     @forelse($inquiries as $inq)
                     <tr>
-                        <td><strong>{{ $inq->quote_number }}</strong></td>
+                        <td><strong>{{ $inq->angebot_nummer }}</strong></td>
                         <td>{{ $inq->created_at->format('d.m.Y H:i') }}</td>
                         <td>
                             @if($inq->user)
@@ -35,20 +35,20 @@
                             @endif
                         </td>
                         <td>
-                            @if($inq->status === 'pending')
+                            @if($inq->status === 'offen')
                                 <span class="badge bg-warning text-dark">Ausstehend</span>
-                            @elseif($inq->status === 'confirmed')
+                            @elseif($inq->status === 'bestätigt')
                                 <span class="badge bg-success">Bestätigt</span>
                             @else
                                 <span class="badge bg-danger">Storniert</span>
                             @endif
                         </td>
-                        <td>{{ number_format($inq->total_estimated_price, 2, ',', '.') }} €</td>
+                        <td>{{ number_format($inq->geschätzter_gesamtpreis, 2, ',', '.') }} €</td>
                         <td>
-                            @if($inq->clickUpMapping && $inq->clickUpMapping->clickup_task_id)
-                                <code>{{ $inq->clickUpMapping->clickup_task_id }}</code>
-                                @if($inq->clickUpMapping->last_synced_at)
-                                <br><small class="text-muted">Sync: {{ $inq->clickUpMapping->last_synced_at->format('d.m. H:i') }}</small>
+                            @if($inq->clickUpMapping && $inq->clickUpMapping->clickup_aufgabe_id)
+                                <code>{{ $inq->clickUpMapping->clickup_aufgabe_id }}</code>
+                                @if($inq->clickUpMapping->zuletzt_synchronisiert_am)
+                                <br><small class="text-muted">Sync: {{ $inq->clickUpMapping->zuletzt_synchronisiert_am->format('d.m. H:i') }}</small>
                                 @endif
                             @else
                                 <span class="text-muted fst-italic">Nicht verknüpft</span>

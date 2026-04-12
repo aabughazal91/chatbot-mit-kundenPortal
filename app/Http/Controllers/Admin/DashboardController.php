@@ -14,33 +14,33 @@ class DashboardController extends Controller
     {
         // Get statistics
         $stats = [
-            'total_inquiries' => Inquiry::count(),
-            'pending_inquiries' => Inquiry::where('status', 'pending')->count(),
-            'confirmed_inquiries' => Inquiry::where('status', 'confirmed')->count(),
-            'total_customers' => User::where('role', 'customer')->count(),
-            'total_revenue' => Inquiry::where('status', 'confirmed')->sum('total_estimated_price'),
-            'active_modules' => PriceModule::where('is_active', true)->count(),
+            'total_inquiries'     => Inquiry::count(),
+            'pending_inquiries'   => Inquiry::where('status', 'offen')->count(),
+            'confirmed_inquiries' => Inquiry::where('status', 'bestätigt')->count(),
+            'total_customers'     => User::where('role', 'kunde')->count(),
+            'total_revenue'       => Inquiry::where('status', 'bestätigt')->sum('geschätzter_gesamtpreis'),
+            'active_modules'      => PriceModule::where('ist_aktiv', true)->count(),
         ];
 
-        // Get recent inquiries
+        // Aktuelle Anfragen abrufen
         $recentInquiries = Inquiry::with('user')
             ->orderBy('created_at', 'desc')
             ->take(5)
             ->get();
 
         // Get monthly revenue data for the last 6 months
-        $monthlyRevenue = Inquiry::where('status', 'confirmed')
+        $monthlyRevenue = Inquiry::where('status', 'bestätigt')
             ->where('created_at', '>=', now()->subMonths(6))
-            ->selectRaw('DATE_FORMAT(created_at, "%Y-%m") as month, SUM(total_estimated_price) as revenue')
+            ->selectRaw('DATE_FORMAT(created_at, "%Y-%m") as month, SUM(geschätzter_gesamtpreis) as revenue')
             ->groupBy('month')
             ->orderBy('month')
             ->get();
 
-        // Get top modules by usage
-        $topModules = DB::table('inquiry_items')
-            ->join('price_modules', 'inquiry_items.price_module_id', '=', 'price_modules.id')
-            ->select('price_modules.label_de', DB::raw('COUNT(*) as usage_count'))
-            ->groupBy('price_modules.id', 'price_modules.label_de')
+        // Die beliebtesten Module nach Nutzung anzeigen
+        $topModules = DB::table('anfrage_positionen')
+            ->join('preis_modules', 'anfrage_positionen.preis_module_id', '=', 'preis_modules.id')
+            ->select('preis_modules.bezeichnung_de', DB::raw('COUNT(*) as usage_count'))
+            ->groupBy('preis_modules.id', 'preis_modules.bezeichnung_de')
             ->orderBy('usage_count', 'desc')
             ->take(5)
             ->get();

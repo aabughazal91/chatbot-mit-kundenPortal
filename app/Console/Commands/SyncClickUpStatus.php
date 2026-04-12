@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\ClickUpMapping;
 use App\Services\ClickUpService;
 use Carbon\Carbon;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
 class SyncClickUpStatus extends Command
@@ -31,44 +31,45 @@ class SyncClickUpStatus extends Command
     {
         Log::info('Starting ClickUp status sync...');
 
-        // 1. جلب جميع السجلات التي تحتاج تحديث
+        // 1. Abrufen aller Datensätze, die aktualisiert werden müssen
         $mappings = ClickUpMapping::all();
 
         if ($mappings->isEmpty()) {
             $this->warn('Keine ClickUp-Mappings gefunden.');
+
             return;
         }
 
         foreach ($mappings as $mapping) {
 
             try {
-                Log::info("Syncing Task ID: {$mapping->clickup_task_id}");
+                Log::info("Syncing Task ID: {$mapping->clickup_aufgabe_id}");
 
-                // 2. الاتصال بالـ API
-                $response = $clickUpService->getTaskStatus($mapping->clickup_task_id);
+                // 2. API-Aufruf
+                $response = $clickUpService->getTaskStatus($mapping->clickup_aufgabe_id);
 
-                if (!$response || empty($response['status_name'])) {
-                    Log::error("API returned invalid response for Task ID: {$mapping->clickup_task_id}");
-                    $mapping->last_synced_at = Carbon::now();
+                if (! $response || empty($response['status_name'])) {
+                    Log::error("API returned invalid response for Task ID: {$mapping->clickup_aufgabe_id}");
+                    $mapping->zuletzt_synchronisiert_am = Carbon::now();
                     $mapping->save();
+
                     continue;
                 }
 
                 $newStatus = $response['status_name'];
 
-                // 3. تحديث قاعدة البيانات
-                $mapping->clickup_status_name = $newStatus;
-                $mapping->last_synced_at = Carbon::now();
+                // 3. Datenbankaktualisierung                $mapping->clickup_status_name = $newStatus;
+                $mapping->zuletzt_synchronisiert_am = Carbon::now();
                 $mapping->save();
 
-                Log::info("Task {$mapping->clickup_task_id} updated successfully. Status: {$newStatus}");
+                Log::info("Task {$mapping->clickup_aufgabe_id} updated successfully. Status: {$newStatus}");
             } catch (\Exception $e) {
 
-                // 4. معالجة حالات الفشل دون إيقاف الـ Loop
-                Log::error("Failed syncing Task ID {$mapping->clickup_task_id}: " . $e->getMessage());
+                // 4. Fehlerbehandlung ohne Anhalten der Schleife
+                Log::error("Failed syncing Task ID {$mapping->clickup_aufgabe_id}: ".$e->getMessage());
 
-                // تحديث وقت آخر محاولة مزامنة حتى لو فشل
-                $mapping->last_synced_at = Carbon::now();
+                // Aktualisiere die Zeit des letzten Synchronisationsversuchs, auch wenn er fehlgeschlagen ist
+                $mapping->zuletzt_synchronisiert_am = Carbon::now();
                 $mapping->save();
 
                 continue;

@@ -30,19 +30,21 @@
                         <td>{{ $module->id }}</td>
                         <td><code>{{ $module->key }}</code></td>
                         <td>
-                            <strong>{{ $module->label_de }}</strong><br>
-                            <small class="text-muted">{{ Str::limit($module->description, 50) }}</small>
+                            <strong>{{ $module->bezeichnung_de }}</strong><br>
+                            <small class="text-muted">{{ Str::limit($module->beschreibung, 50) }}</small>
                         </td>
-                        <td>{{ number_format($module->price, 2, ',', '.') }} €</td>
+                        <td>{{ number_format($module->preis, 2, ',', '.') }} €</td>
                         <td>
-                            @if($module->type === 'boolean')
+                            @if($module->typ === 'boolean')
                                 <span class="badge bg-info">Fixpreis (Ja/Nein)</span>
-                            @else
+                            @elseif($module->typ === 'quantity')
                                 <span class="badge bg-warning text-dark">Pro Einheit (Zahl)</span>
+                            @else
+                                <span class="badge bg-secondary">Auswahl</span>
                             @endif
                         </td>
                         <td>
-                            @if($module->is_active)
+                            @if($module->ist_aktiv)
                                 <span class="badge bg-success">Aktiv</span>
                             @else
                                 <span class="badge bg-secondary">Inaktiv</span>

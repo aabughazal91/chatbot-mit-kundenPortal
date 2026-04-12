@@ -6,13 +6,30 @@ use Illuminate\Database\Eloquent\Model;
 
 class PriceModule extends Model
 {
-    protected $casts = [
-        'options' => 'array',   
-        'customer_choice' => 'array',
+    // Maps to the 'preis_modules' table
+    protected $table = 'preis_modules';
+
+    protected $fillable = [
+        'key',
+        'bezeichnung_de',
+        'beschreibung',
+        'preis',
+        'typ',
+        'optionen',
+        'kategorie',
+        'ist_aktiv',
     ];
 
-    public function inquiryItems() {
-    return $this->hasMany(InquiryItem::class);
-}
-    protected $guarded = [];
+    protected $casts = [
+        'optionen'  => 'array',
+        'ist_aktiv' => 'boolean',
+    ];
+
+    /**
+     * Get the inquiry items that use this module.
+     */
+    public function inquiryItems()
+    {
+        return $this->hasMany(InquiryItem::class, 'preis_module_id');
+    }
 }

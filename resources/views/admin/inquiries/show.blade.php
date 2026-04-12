@@ -1,6 +1,6 @@
 @extends('admin.layout')
 
-@section('header_title', 'Anfrage Details: ' . $inquiry->quote_number)
+@section('header_title', 'Anfrage Details: ' . $inquiry->angebot_nummer)
 
 @section('content')
 <div class="row">
@@ -8,7 +8,7 @@
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-white d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Kundenangaben & Kalkulation</h5>
-                <a href="{{ route('chatbot.pdf', $inquiry->quote_number) }}" class="btn btn-outline-danger btn-sm" target="_blank">
+                <a href="{{ route('chatbot.pdf', $inquiry->angebot_nummer) }}" class="btn btn-outline-danger btn-sm" target="_blank">
                     <i class="bi bi-file-earmark-pdf"></i> PDF Anzeigen/Download
                 </a>
             </div>
@@ -28,28 +28,28 @@
                         <tbody>
                             @foreach($inquiry->items as $item)
                             <tr>
-                                <td>{{ $item->priceModule ? $item->priceModule->label_de : 'Unbekannt (Gelöscht)' }}</td>
-                                <td>{{ $item->customer_choice ?? ($item->quantity > 1 ? $item->quantity . ' Stück' : 'Ja') }}</td>
+                                <td>{{ $item->priceModule ? $item->priceModule->bezeichnung_de : 'Unbekannt (Gelöscht)' }}</td>
+                                <td>{{ $item->kunden_auswahl ?? ($item->menge > 1 ? $item->menge . ' Stück' : 'Ja') }}</td>
                                 <td class="text-center"></td>
                                 <td class="text-end">
                                     <form action="{{ route('admin.inquiries.updateItemPrice', [$inquiry, $item]) }}" method="POST" class="d-inline-flex align-items-center gap-1 justify-content-end">
                                         @csrf
                                         @method('PATCH')
-                                        <input type="number" name="price_at_time" value="{{ $item->price_at_time }}" step="0.01" min="0" class="form-control form-control-sm text-end" style="width: 100px;">
+                                        <input type="number" name="preis_zum_zeitpunkt" value="{{ $item->preis_zum_zeitpunkt }}" step="0.01" min="0" class="form-control form-control-sm text-end" style="width: 100px;">
                                         <span>€</span>
                                         <button type="submit" class="btn btn-outline-primary btn-sm" title="Preis speichern">
                                             <i class="bi bi-check-lg"></i>
                                         </button>
                                     </form>
                                 </td>
-                                <td class="text-end">{{ number_format($item->price_at_time * $item->quantity, 2, ',', '.') }} €</td>
+                                <td class="text-end">{{ number_format($item->preis_zum_zeitpunkt * $item->menge, 2, ',', '.') }} €</td>
                             </tr>
                             @endforeach
                         </tbody>
                         <tfoot class="table-group-divider">
                             <tr>
                                 <th colspan="4" class="text-end fs-5">Gesamtsumme (Brutto):</th>
-                                <th class="text-end fs-5 text-primary">{{ number_format($inquiry->total_estimated_price, 2, ',', '.') }} €</th>
+                                <th class="text-end fs-5 text-primary">{{ number_format($inquiry->geschätzter_gesamtpreis, 2, ',', '.') }} €</th>
                             </tr>
                         </tfoot>
                     </table>
@@ -73,9 +73,9 @@
                     <div class="mb-3">
                         <label class="form-label">Aktueller Status</label>
                         <select name="status" class="form-select">
-                            <option value="pending" {{ $inquiry->status === 'pending' ? 'selected' : '' }}>Ausstehend</option>
-                            <option value="confirmed" {{ $inquiry->status === 'confirmed' ? 'selected' : '' }}>Bestätigt</option>
-                            <option value="cancelled" {{ $inquiry->status === 'cancelled' ? 'selected' : '' }}>Storniert</option>
+                            <option value="offen" {{ $inquiry->status === 'offen' ? 'selected' : '' }}>Ausstehend</option>
+                            <option value="bestätigt" {{ $inquiry->status === 'bestätigt' ? 'selected' : '' }}>Bestätigt</option>
+                            <option value="storniert" {{ $inquiry->status === 'storniert' ? 'selected' : '' }}>Storniert</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Status Speichern</button>
@@ -93,7 +93,7 @@
                         @method('PATCH')
                         <div class="mb-3">
                             <label class="form-label">Update Projekt Name</label>
-                            <input type="text" name="quote_number" class="form-control" value="{{ $inquiry->quote_number }}">
+                            <input type="text" name="quote_number" class="form-control" value="{{ $inquiry->angebot_nummer }}">
                         </div>
                         <button type="submit" class="btn btn-primary w-100">Projekt Name Speichern</button>
                     </form>
@@ -142,17 +142,17 @@
                     @method('PATCH')
                     <div class="mb-3">
                         <label class="form-label">ClickUp Task ID</label>
-                        <input type="text" name="clickup_task_id" class="form-control" placeholder="z.B. 86dqx1..." value="{{ old('clickup_task_id', $inquiry->clickUpMapping->clickup_task_id ?? '') }}" required>
+                        <input type="text" name="clickup_task_id" class="form-control" placeholder="z.B. 86dqx1..." value="{{ old('clickup_task_id', $inquiry->clickUpMapping->clickup_aufgabe_id ?? '') }}" required>
                         <div class="form-text">Task ID aus der URL kopieren.</div>
                     </div>
                     <button type="submit" class="btn btn-dark w-100">Task verknüpfen</button>
                 </form>
 
-                @if($inquiry->clickUpMapping && $inquiry->clickUpMapping->last_synced_at)
+                @if($inquiry->clickUpMapping && $inquiry->clickUpMapping->zuletzt_synchronisiert_am)
                 <hr>
                 <div class="small">
                     <strong>Letzter Sync:</strong> <br>
-                    <span class="text-muted">{{ $inquiry->clickUpMapping->last_synced_at->format('d.m.Y H:i:s') }}</span>
+                    <span class="text-muted">{{ $inquiry->clickUpMapping->zuletzt_synchronisiert_am->format('d.m.Y H:i:s') }}</span>
                 </div>
                 @endif
             </div>

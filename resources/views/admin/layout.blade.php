@@ -12,7 +12,10 @@
 </head>
 <body>
 
+    
+
 <div class="container-fluid">
+   
     <div class="row">
         <!-- Sidebar -->
         <div class="col-md-2 sidebar d-flex flex-column">
@@ -46,7 +49,17 @@
         <!-- Main Content -->
         <div class="col-md-10 p-0">
           
-
+ <nav class="navbar navbar-expand-lg navbar-light navbar-custom px-4 py-3">
+                <div class="container-fluid pl-0">
+                    <span class="navbar-brand mb-0 h1">@yield('header_title', 'Kunden Dashboard')</span>
+                    <img src="{{ asset('logo.png') }}" alt="">
+                    <div class="d-flex">
+                        <span class="navbar-text">
+                            Eingeloggt als: <strong>{{ auth()->user()->name }}</strong>
+                        </span>
+                    </div>
+                </div>
+            </nav>
             <!-- Page Content -->
             <div class="content mt-3">
                 @if (session('success'))

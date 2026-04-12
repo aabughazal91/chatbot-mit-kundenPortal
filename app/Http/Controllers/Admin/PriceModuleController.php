@@ -32,18 +32,18 @@ class PriceModuleController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'key' => 'required|string|unique:price_modules',
-            'label_de' => 'required|string',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric',
-            'type' => 'required|in:boolean,quantity,select',
-            'category' => 'nullable|string',
-            'options' => 'nullable|array',
-            'options.*.label' => 'required_with:options|string',
-            'options.*.price' => 'required_with:options|numeric',
+            'key'              => 'required|string|unique:preis_modules',
+            'bezeichnung_de'   => 'required|string',
+            'beschreibung'     => 'nullable|string',
+            'preis'            => 'required|numeric',
+            'typ'              => 'required|in:boolean,quantity,select',
+            'kategorie'        => 'nullable|string',
+            'optionen'         => 'nullable|array',
+            'optionen.*.label' => 'required_with:optionen|string',
+            'optionen.*.price' => 'required_with:optionen|numeric',
         ]);
 
-        $data['is_active'] = $request->has('is_active'); // checkbox
+        $data['ist_aktiv'] = $request->has('ist_aktiv'); // checkbox
 
         PriceModule::create($data);
 
@@ -73,18 +73,18 @@ class PriceModuleController extends Controller
     public function update(Request $request, PriceModule $priceModule)
     {
         $data = $request->validate([
-            'key' => 'required|string|unique:price_modules,key,' . $priceModule->id,
-            'label_de' => 'required|string',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric',
-            'type' => 'required|in:boolean,quantity,select',
-            'category' => 'nullable|string',
-            'options' => 'nullable|array',
-            'options.*.label' => 'required_with:options|string',
-            'options.*.price' => 'required_with:options|numeric',
+            'key'              => 'required|string|unique:preis_modules,key,'.$priceModule->id,
+            'bezeichnung_de'   => 'required|string',
+            'beschreibung'     => 'nullable|string',
+            'preis'            => 'required|numeric',
+            'typ'              => 'required|in:boolean,quantity,select',
+            'kategorie'        => 'nullable|string',
+            'optionen'         => 'nullable|array',
+            'optionen.*.label' => 'required_with:optionen|string',
+            'optionen.*.price' => 'required_with:optionen|numeric',
         ]);
 
-        $data['is_active'] = $request->has('is_active'); // checkbox
+        $data['ist_aktiv'] = $request->has('ist_aktiv'); // checkbox
 
         $priceModule->update($data);
 

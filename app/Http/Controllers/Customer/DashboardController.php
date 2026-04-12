@@ -21,10 +21,10 @@ class DashboardController extends Controller
 
         // Get user statistics
         $stats = [
-            'total_inquiries' => $inquiries->count(),
-            'pending_inquiries' => $inquiries->where('status', 'pending')->count(),
-            'confirmed_inquiries' => $inquiries->where('status', 'confirmed')->count(),
-            'total_spent' => $inquiries->where('status', 'confirmed')->sum('total_estimated_price'),
+            'total_inquiries'     => $inquiries->count(),
+            'pending_inquiries'   => $inquiries->where('status', 'offen')->count(),
+            'confirmed_inquiries' => $inquiries->where('status', 'bestätigt')->count(),
+            'total_spent'         => $inquiries->where('status', 'bestätigt')->sum('geschätzter_gesamtpreis'),
         ];
 
         // Get active project (first inquiry with ClickUp mapping)

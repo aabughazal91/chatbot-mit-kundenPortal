@@ -20,13 +20,22 @@ class UserSeeder extends Seeder
                 'name' => 'Max Mustermann',
                 'password' => Hash::make('test1234'),
                 'is_admin' => false,
-                'role' => 'customer',
+                'role' => 'kunde',
                 'is_confirmed' => true,
-                'company' => 'Muster GmbH',
-                'phone' => '+49 123 456789',
-                'street' => 'Musterstraße 1',
-                'zip' => '12345',
-                'city' => 'Musterstadt',
+                'firma' => 'Muster GmbH',
+                'tel' => '+49 123 456789',
+                'strasse' => 'Musterstraße 1',
+                'zip_stadt' => '12345 Musterstadt',
+            ]
+        );
+        User::firstOrCreate(
+            ['email' => 'admin@test.com'],
+            [
+                'name' => 'Admin User',
+                'password' => Hash::make('test1234'),
+                'is_admin' => true,
+                'role' => 'admin',
+                'is_confirmed' => true,
             ]
         );
     }

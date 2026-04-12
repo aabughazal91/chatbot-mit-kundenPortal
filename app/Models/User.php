@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -13,12 +12,6 @@ class User extends Authenticatable implements MustVerifyEmail
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
-    
     const ROLE_ADMIN = 'admin';
     const ROLE_KUNDE = 'kunde';
 
@@ -26,6 +19,7 @@ class User extends Authenticatable implements MustVerifyEmail
         self::ROLE_ADMIN,
         self::ROLE_KUNDE,
     ];
+
     protected $fillable = [
         'name',
         'username',
@@ -33,18 +27,12 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'role',
         'is_confirmed',
-        'company',
-        'phone',
-        'street',
-        'zip',
-        'city',
+        'firma',
+        'tel',
+        'strasse',
+        'zip_stadt',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
@@ -69,13 +57,24 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'is_confirmed' => 'boolean',
+            'password'          => 'hashed',
+            'is_confirmed'      => 'boolean',
         ];
     }
 
+    /**
+     * Get all inquiries for this user.
+     */
     public function inquiries()
     {
-        return $this->hasMany(\App\Models\Inquiry::class);
+        return $this->hasMany(Inquiry::class);
+    }
+
+    /**
+     * Get all chatbot quotes for this user.
+     */
+    public function chatbotQuotes()
+    {
+        return $this->hasMany(ChatbotQuote::class);
     }
 }

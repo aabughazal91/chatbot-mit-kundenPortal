@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::create('inquiries', function (Blueprint $table) {
+       Schema::create('anfragen', function (Blueprint $table) {
             $table->id();
-            $table->string('quote_number')->unique(); // التنسيق الذي اخترته BOT-YYYYMMDD...
-            $table->string('session_id')->nullable(); 
+            $table->string('angebot_nummer')->unique(); 
+            $table->string('sessions_id')->nullable(); 
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null'); 
-            $table->decimal('total_estimated_price', 10, 2); // [cite: 6]
-            $table->string('pdf_path')->nullable(); // [cite: 7]
-            $table->string('status')->default('pending'); // 
+            $table->decimal('geschätzter_gesamtpreis', 10, 2); 
+            $table->string('pdf_pfad')->nullable(); 
+            $table->string('status')->default('offen'); 
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('inquiries');
+        Schema::dropIfExists('anfragen');
     }
 };

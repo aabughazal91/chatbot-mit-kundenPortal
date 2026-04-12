@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Inquiry;
 use App\Models\ClickUpMapping;
 use App\Services\ClickUpService;
 use Illuminate\Http\Request;
@@ -24,31 +23,31 @@ class ClickUpController extends Controller
     {
         // التحقق من صحة البيانات
         $request->validate([
-            'inquiry_id' => ['required', 'exists:inquiries,id'],
+            'anfrage_id'      => ['required', 'exists:anfragen,id'],
             'clickup_task_id' => ['required', 'string'],
         ]);
 
-        $inquiryId = $request->input('inquiry_id');
+        $inquiryId = $request->input('anfrage_id');
         $taskId = ltrim($request->input('clickup_task_id'), '#'); // إزالة الهاشتاج إذا كان موجوداً
 
         // جلب الحالة لأول مرة عن طريق السيرفر للتأكد من صحة رقم التاسك
         $taskData = $this->clickUpService->getTaskStatus($taskId);
 
-        if (!$taskData) {
+        if (! $taskData) {
             // معالجة الأخطاء (IHK requirement)
             return back()->withErrors([
-                'clickup_error' => 'Could not fetch task from ClickUp. Please verify the Task ID and your internet connection.'
+                'clickup_error' => 'Could not fetch task from ClickUp. Please verify the Task ID and your internet connection.',
             ]);
         }
 
         // إنشاء أو تحديث السجل في جدول clickup_mappings
         ClickUpMapping::updateOrCreate(
-            ['inquiry_id' => $inquiryId],
+            ['anfrage_id' => $inquiryId],
             [
-                'clickup_task_id' => $taskId,
-                'clickup_status_name' => $taskData['status_name'],
-                'raw_api_response' => $taskData['raw_response'],
-                'last_synced_at' => now(),
+                'clickup_aufgabe_id'        => $taskId,
+                'clickup_status_name'       => $taskData['status_name'],
+                'rohe_api_antwort'          => $taskData['raw_response'],
+                'zuletzt_synchronisiert_am' => now(),
             ]
         );
 
@@ -69,14 +68,13 @@ class ClickUpController extends Controller
 
             if ($taskData) {
                 $mapping->update([
-                    'clickup_status_name' => $taskData['status_name'],
-                    'raw_api_response' => $taskData['raw_response'],
-                    'last_synced_at' => now(),
+                    'clickup_status_name'       => $taskData['status_name'],
+                    'rohe_api_antwort'          => $taskData['raw_response'],
+                    'zuletzt_synchronisiert_am' => now(),
                 ]);
                 $syncedCount++;
             } else {
-                // إذا فشل الاتصال بواحدة من المهام، نستمر مع الباقي ونسجل الخطأ
-                Log::warning("ClickUpController: Failed to sync task ID {$mapping->clickup_task_id} for inquiry {$mapping->inquiry_id}");
+                Log::warning("ClickUpController: Failed to sync task ID {$mapping->clickup_aufgabe_id} for anfrage {$mapping->anfrage_id}");
                 $failedCount++;
             }
         }

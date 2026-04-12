@@ -3,37 +3,39 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Inquiry;
-use App\Models\ClickUpMapping;
-use App\Models\User; // إضافة موديل المستخدم
-use Illuminate\Http\Request;
-use Illuminate\Support\Str; // لتوليد كلمة سر عشوائية
 use App\Mail\WelcomeCustomerMail;
+use App\Models\ClickUpMapping;
+use App\Models\Inquiry; // Benutzermodell hinzufügen
+use App\Models\User;
+use Illuminate\Http\Request; // Um ein zufälliges Passwort zu generieren
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class InquiryController extends Controller
 {
     public function index()
     {
-        // تم إضافة 'user' للـ eager loading لعرض صاحب الطلب في الجدول
+        // 'user' wurde für das Eager Loading hinzugefügt, um den Anforderer in der Tabelle anzuzeigen
         $inquiries = Inquiry::with(['clickUpMapping', 'user'])->orderBy('created_at', 'desc')->paginate(20);
+
         return view('admin.inquiries.index', compact('inquiries'));
     }
 
     public function show(Inquiry $inquiry)
     {
         $inquiry->load(['items.priceModule', 'clickUpMapping', 'user']);
+
         return view('admin.inquiries.show', compact('inquiry'));
     }
 
     /**
-     * ربط الطلب بمستخدم (سواء موجود مسبقاً أو جديد)
+     * Die Anfrage mit einem Benutzer verknüpfen (ob bereits vorhanden oder neu)
      */
     public function linkUser(Request $request, Inquiry $inquiry)
     {
         $request->validate([
             'identifier' => 'required|string',
-            'name'       => 'nullable|string|max:255'
+            'name' => 'nullable|string|max:255',
         ]);
 
         $identifier = $request->identifier;
@@ -45,28 +47,28 @@ class InquiryController extends Controller
             $msg = "Bestehender Kunde ({$user->name}) erfolgreich verknüpft!";
         } else {
             // User not found. We can only create a new user if the identifier is an email address.
-            if (!$isEmail) {
+            if (! $isEmail) {
                 return back()->with('error', 'Benutzer wurde nicht gefunden. Um einen neuen Benutzer zu erstellen, geben Sie bitte eine gültige E-Mail-Adresse ein.');
             }
 
-            // توليد كلمة سر عشوائية
+            // Zufälliges Passwort generieren
             $plainPassword = Str::random(10);
 
             $user = User::create([
                 'name'         => $request->name ?? 'Kunde',
                 'email'        => $identifier,
-                'username'     => explode('@', $identifier)[0] . rand(10, 99), // اسم مستخدم افتراضي من الإيميل
+                'username'     => explode('@', $identifier)[0].rand(10, 99),
                 'password'     => bcrypt($plainPassword),
-                'role'         => 'customer',
-                'is_confirmed' => true
+                'role'         => 'kunde',
+                'is_confirmed' => true,
             ]);
 
-            // إرسال الإيميل الترحيبي للعميل
+            // Willkommens-E-Mail an den Kunden senden
             try {
                 Mail::to($user->email)->send(new WelcomeCustomerMail($user, $plainPassword));
                 $msg = "Neuer Kunde erstellt und verknüpft! Eine Willkommens-E-Mail wurde an {$user->email} gesendet.";
             } catch (\Exception $e) {
-                $msg = "Neuer Kunde erstellt und verknüpft! Die Willkommens-E-Mail konnte jedoch nicht gesendet werden.";
+                $msg = 'Neuer Kunde erstellt und verknüpft! Die Willkommens-E-Mail konnte jedoch nicht gesendet werden.';
             }
         }
 
@@ -78,16 +80,16 @@ class InquiryController extends Controller
     public function updateStatus(Request $request, Inquiry $inquiry)
     {
         $request->validate([
-            'status' => 'required|in:pending,confirmed,cancelled'
+            'status' => 'required|in:offen,bestätigt,storniert',
         ]);
 
         // منطق إضافي: لا يمكن تأكيد طلب (Confirmed) بدون وجود مستخدم مرتبط
-        if ($request->status === 'confirmed' && !$inquiry->user_id) {
+        if ($request->status === 'bestätigt' && ! $inquiry->user_id) {
             return back()->with('error', 'Bitte verknüpfen Sie zuerst einen Benutzer, bevor Sie den Status auf "Confirmed" setzen.');
         }
 
         $inquiry->update([
-            'status' => $request->status
+            'status' => $request->status,
         ]);
 
         return back()->with('success', 'Status erfolgreich aktualisiert.');
@@ -96,15 +98,15 @@ class InquiryController extends Controller
     public function updateClickUp(Request $request, Inquiry $inquiry)
     {
         $request->validate([
-            'clickup_task_id' => 'required|string'
+            'clickup_task_id' => 'required|string',
         ]);
 
-        // استخدام updateOrCreate لضمان وجود سجل واحد فقط لكل Inquiry [cite: 46]
+        // Verwenden updateOrCreate für die Sicherstellung, dass nur ein Datensatz pro Inquiry existiert [cite: 46]
         ClickUpMapping::updateOrCreate(
-            ['inquiry_id' => $inquiry->id],
+            ['anfrage_id' => $inquiry->id],
             [
-                'clickup_task_id' => $request->clickup_task_id,
-                'last_synced_at' => null // تصفير وقت المزامنة ليقوم الـ Scheduler بجلب البيانات فوراً
+                'clickup_aufgabe_id'        => $request->clickup_task_id,
+                'zuletzt_synchronisiert_am' => null,
             ]
         );
 
@@ -118,7 +120,7 @@ class InquiryController extends Controller
         ]);
 
         $inquiry->update([
-            'quote_number' => $request->quote_number,
+            'angebot_nummer' => $request->quote_number,
         ]);
 
         return back()->with('success', 'Projekt Name erfolgreich aktualisiert.');
@@ -127,22 +129,22 @@ class InquiryController extends Controller
     public function updateItemPrice(Request $request, Inquiry $inquiry, \App\Models\InquiryItem $item)
     {
         // Sicherstellen, dass das Item zu dieser Anfrage gehört
-        if ($item->inquiry_id !== $inquiry->id) {
+        if ($item->anfrage_id !== $inquiry->id) {
             abort(404);
         }
 
         $request->validate([
-            'price_at_time' => 'required|numeric|min:0',
+            'preis_zum_zeitpunkt' => 'required|numeric|min:0',
         ]);
 
         $item->update([
-            'price_at_time' => $request->price_at_time,
+            'preis_zum_zeitpunkt' => $request->preis_zum_zeitpunkt,
         ]);
 
         // Gesamtsumme neu berechnen
         $inquiry->update([
-            'total_estimated_price' => $inquiry->items()->get()->sum(function ($i) {
-                return $i->price_at_time * $i->quantity;
+            'geschätzter_gesamtpreis' => $inquiry->items()->get()->sum(function ($i) {
+                return $i->preis_zum_zeitpunkt * $i->menge;
             }),
         ]);
 
@@ -152,6 +154,7 @@ class InquiryController extends Controller
     public function destroy(Inquiry $inquiry)
     {
         $inquiry->delete();
+
         return redirect()->route('admin.inquiries.index')->with('success', 'Anfrage erfolgreich gelöscht.');
     }
 }

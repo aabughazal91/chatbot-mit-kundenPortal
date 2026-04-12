@@ -6,13 +6,27 @@ use Illuminate\Database\Eloquent\Model;
 
 class ChatbotQuote extends Model
 {
+    // Maps to the 'chatbot_angebote' table
+    protected $table = 'chatbot_angebote';
+
     protected $fillable = [
-        'quote_number',
-        'answers',
-        'estimate',
+        'angebot_nummer',
+        'user_id',
+        'antworten',
+        'gesamtsumme_schaetzung',
+        'status',
+        'pdf_pfad',
     ];
 
     protected $casts = [
-        'answers' => 'array',
+        'antworten' => 'array',
     ];
+
+    /**
+     * Get the user that owns this quote.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

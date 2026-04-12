@@ -102,13 +102,13 @@
                                 <tbody>
                                     @foreach($recentInquiries as $inquiry)
                                     <tr>
-                                        <td><strong>{{ $inquiry->quote_number }}</strong></td>
+                                        <td><strong>{{ $inquiry->angebot_nummer }}</strong></td>
                                         <td>{{ $inquiry->user ? $inquiry->user->name : 'Nicht zugewiesen' }}</td>
-                                        <td>{{ number_format($inquiry->total_estimated_price, 2, ',', '.') }} €</td>
+                                        <td>{{ number_format($inquiry->geschätzter_gesamtpreis, 2, ',', '.') }} €</td>
                                         <td>
-                                            @if($inquiry->status === 'pending')
+                                            @if($inquiry->status === 'offen')
                                                 <span class="badge bg-warning text-dark">In Prüfung</span>
-                                            @elseif($inquiry->status === 'confirmed')
+                                            @elseif($inquiry->status === 'bestätigt')
                                                 <span class="badge bg-success">Bestätigt</span>
                                             @else
                                                 <span class="badge bg-secondary">Archiviert</span>
@@ -171,7 +171,7 @@
                         <div class="progress mb-3">
                             <div class="progress-bar" role="progressbar" style="width: {{ ($module->usage_count / $topModules->first()->usage_count) * 100 }}%" aria-valuenow="{{ $module->usage_count }}" aria-valuemin="0" aria-valuemax="{{ $topModules->first()->usage_count }}"></div>
                         </div>
-                        <h6 class="small font-weight-bold">{{ $module->label_de }}</h6>
+                        <h6 class="small font-weight-bold">{{ $module->bezeichnung_de }}</h6>
                         <span class="text-xs">{{ $module->usage_count }} Mal verwendet</span>
                         <hr>
                         @endforeach

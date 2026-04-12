@@ -11,15 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('price_modules', function (Blueprint $table) {
+        Schema::create('preis_modules', function (Blueprint $table) {
             $table->id();
             $table->string('key')->unique();
-            $table->string('label_de');
-            $table->text('description')->nullable();
-            $table->decimal('price', 10, 2); // السعر الأساسي لهذه الميزة
-            
-            $table->string('category');      // لتصنيف الأسئلة (Backend, Frontend, API)
-            $table->boolean('is_active'); // لتعطيل ميزة مؤقتاً دون حذفها
+            $table->string('bezeichnung_de');
+            $table->text('beschreibung')->nullable();
+            $table->decimal('preis', 10, 2);
+            $table->string('typ')->default('boolean');
+            $table->json('optionen')->nullable();
+            $table->string('kategorie');
+            $table->boolean('ist_aktiv')->default(true);
             $table->timestamps();
 
         });

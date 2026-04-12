@@ -20,15 +20,15 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Handle an incoming authentication request.
+     * Eine eingehende Authentifizierungsanfrage bearbeiten.
      */
    public function store(LoginRequest $request): RedirectResponse
 {
-    // 1. تحديد ما إذا كان المدخل إيميل أم اسم مستخدم
-    $login = $request->input('login'); // سنقوم بتغيير اسم الحقل في واجهة الـ Blade لاحقاً إلى login
+    // 1. Bestimmen, ob die Eingabe eine E-Mail-Adresse oder ein Benutzername ist
+    $login = $request->input('login'); // Wir werden den Feldnamen in der Blade-Vorlage später zu 'login' ändern
     $fieldType = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
-    // 2. دمج الحقل الصحيح في الطلب ليتمكن Breeze من معالجته
+    // 2. Das korrekte Feld in der Anfrage zusammenführen, damit Breeze es verarbeiten kann
     $request->merge([$fieldType => $login]);
 
     // 3. محاولة تسجيل الدخول
@@ -47,7 +47,6 @@ class AuthenticatedSessionController extends Controller
 
     $request->session()->regenerate();
 
-    // 5. توجيه المستخدم حسب دوره (Admin -> Dashboard, Customer -> My Project)
     if (Auth::user()->role === 'admin') {
         return redirect()->intended(route('admin.dashboard'));
     }

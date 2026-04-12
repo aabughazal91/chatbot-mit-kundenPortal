@@ -18,6 +18,13 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->boolean('is_admin')->default(false);
+            $table->string('role')->default('kunde'); 
+            $table->boolean('is_confirmed')->default(false);
+            $table->string('firma')->nullable();
+            $table->string('tel')->nullable();
+            $table->string('strasse')->nullable();
+            $table->string('zip_stadt')->nullable(); 
             $table->rememberToken();
             $table->timestamps();
         });

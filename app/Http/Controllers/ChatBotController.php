@@ -12,16 +12,16 @@ use Illuminate\Support\Str; // تأكد من تثبيت dompdf
 class ChatBotController extends Controller
 {
     /**
-     * عرض الصفحة الأولى وبدء الجلسة
-     */
+    * Die erste Seite anzeigen und die Sitzung starten     
+    */
     public function show(Request $request)
     {
-        // إعادة ضبط الجلسة عند البداية
+        // wiederholte Einstellung der Sitzung am Anfang
         $request->session()->put('chatbot.step', 0);
         $request->session()->put('chatbot.answers', []);
 
-        // جلب أول سؤال ديناميكياً من قاعدة البيانات
-        $firstModule = PriceModule::where('is_active', true)->orderBy('id', 'asc')->first();
+        // Die erste Frage dynamisch aus der Datenbank abrufen
+        $firstModule = PriceModule::where('ist_aktiv', true)->orderBy('id', 'asc')->first();
 
         if (! $firstModule) {
             return view('chatbot', [
@@ -49,8 +49,8 @@ class ChatBotController extends Controller
             'message' => ['required', 'string', 'max:200'],
         ]);
 
-        // جلب قائمة الموديلات النشطة من قاعدة البيانات
-        $modules = PriceModule::where('is_active', true)->orderBy('id', 'asc')->get();
+        // Die Liste der aktiven Module aus der Datenbank abrufen
+        $modules = PriceModule::where('ist_aktiv', true)->orderBy('id', 'asc')->get();
         $stepIndex = (int) $request->session()->get('chatbot.step', 0);
         $answers = (array) $request->session()->get('chatbot.answers', []);
 
@@ -61,7 +61,7 @@ class ChatBotController extends Controller
             ]);
         }
 
-        // التأكد من وجود خطوات متبقية
+        // // Prüfen, ob noch Schritte ausstehen
         if ($stepIndex >= $modules->count()) {
             return $this->finalizeInquiry($request);
         }
@@ -69,13 +69,13 @@ class ChatBotController extends Controller
         $currentModule = $modules[$stepIndex];
         $userMsg = trim(mb_strtolower($request->input('message')));
 
-        // تحويل الموديل إلى "خطوة" للفحص (الفحص هنا يعتمد على نعم/لا غالباً)
+        // Das Modell wird für die Prüfung in einen "Schritt" umgewandelt (die Prüfung basiert hier üblicherweise auf Ja/Nein).)
         $stepData = $this->transformModuleToStep($currentModule);
         [$ok, $value, $error] = $this->parseAnswer($stepData, $userMsg);
 
         if (! $ok) {
             return response()->json([
-                'bot' => config('chatbot.parsing_error').' '.$currentModule->label_de,
+                'bot' => config('chatbot.parsing_error').' '.$currentModule->bezeichnung_de,
                 'type' => $stepData['type'],
                 'options' => $stepData['options'] ?? null,
                 'done' => false,
@@ -83,19 +83,19 @@ class ChatBotController extends Controller
             ], 422);
         }
 
-        // حفظ الإجابة
+        // Speichern der Antwort
         $answers[$currentModule->key] = $value;
         $request->session()->put('chatbot.answers', $answers);
 
         $stepIndex++;
         $request->session()->put('chatbot.step', $stepIndex);
 
-        // إذا وصلنا للنهاية -> حفظ البيانات وتوليد الـ PDF
+        // Wenn wir das Ende erreicht haben -> Daten speichern und PDF generieren
         if ($stepIndex >= $modules->count()) {
             return $this->finalizeInquiry($request);
         }
 
-        // إرسال السؤال التالي
+        // Nächste Frage senden
         $nextModule = $modules[$stepIndex];
         $nextStep = $this->transformModuleToStep($nextModule);
 
@@ -126,70 +126,70 @@ class ChatBotController extends Controller
     }
 
     /**
-     * تحويل بيانات الموديل من DB إلى تنسيق يفهمه الـ Frontend
-     */
+    * Konvertierung von Modelldaten aus der Datenbank in ein vom Frontend verständliches Format
+    */
     private function transformModuleToStep($module)
     {
-        if ($module->type === 'quantity') {
+        if ($module->typ === 'quantity') {
             return [
-                'key' => $module->key,
-                'question' => sprintf(config('chatbot.quantity_question'), $module->label_de),
-                'description' => $module->description,
-                'type' => 'number', // سيستخدم الـ Frontend حقل إدخال رقمي
-                'min' => 1,
-                'max' => 50,
+                'key'         => $module->key,
+                'question'    => sprintf(config('chatbot.quantity_question'), $module->bezeichnung_de),
+                'description' => $module->beschreibung,
+                'type'        => 'number',
+                'min'         => 1,
+                'max'         => 50,
             ];
         }
 
-        if ($module->type === 'select') {
-            $options = is_array($module->options) ? $module->options : json_decode($module->options, true) ?? [];
+        if ($module->typ === 'select') {
+            $options = is_array($module->optionen) ? $module->optionen : json_decode($module->optionen, true) ?? [];
             if (! empty($options)) {
                 return [
-                    'key' => $module->key,
-                    'question' => $module->label_de,
-                    'description' => $module->description,
-                    'type' => 'select',
-                    'options' => array_column($options, 'label'),
+                    'key'         => $module->key,
+                    'question'    => $module->bezeichnung_de,
+                    'description' => $module->beschreibung,
+                    'type'        => 'select',
+                    'options'     => array_column($options, 'label'),
                 ];
             }
 
             // Fallback to hardcoded logic if no DB options are set
             if ($module->key === 'design_type') {
                 return [
-                    'key' => $module->key,
-                    'question' => $module->label_de,
-                    'description' => $module->description,
-                    'type' => 'select',
-                    'options' => config('chatbot.design_type_options'),
+                    'key'         => $module->key,
+                    'question'    => $module->bezeichnung_de,
+                    'description' => $module->beschreibung,
+                    'type'        => 'select',
+                    'options'     => config('chatbot.design_type_options'),
                 ];
             }
             if ($module->key === 'anzahl_der_seiten') {
                 return [
-                    'key' => $module->key,
-                    'question' => config('chatbot.pages_question'),
-                    'description' => $module->description,
-                    'type' => 'select',
-                    'options' => config('chatbot.pages_options'),
+                    'key'         => $module->key,
+                    'question'    => config('chatbot.pages_question'),
+                    'description' => $module->beschreibung,
+                    'type'        => 'select',
+                    'options'     => config('chatbot.pages_options'),
                 ];
             }
             if ($module->key === 'anzahl_der_sprachen') {
                 return [
-                    'key' => $module->key,
-                    'question' => config('chatbot.languages_question'),
-                    'description' => $module->description,
-                    'type' => 'number',
-                    'min' => 1,
-                    'max' => 20,
+                    'key'         => $module->key,
+                    'question'    => config('chatbot.languages_question'),
+                    'description' => $module->beschreibung,
+                    'type'        => 'number',
+                    'min'         => 1,
+                    'max'         => 20,
                 ];
             }
         }
 
         return [
-            'key' => $module->key,
-            'question' => sprintf(config('chatbot.boolean_question'), $module->label_de),
-            'description' => $module->description,
-            'type' => 'boolean',
-            'options' => config('chatbot.boolean_options'),
+            'key'         => $module->key,
+            'question'    => sprintf(config('chatbot.boolean_question'), $module->bezeichnung_de),
+            'description' => $module->beschreibung,
+            'type'        => 'boolean',
+            'options'     => config('chatbot.boolean_options'),
         ];
     }
 
@@ -208,29 +208,29 @@ class ChatBotController extends Controller
     }
 
     /**
-     * إنهاء الطلب وحفظه في قاعدة البيانات
-     */
+    * Schließen Sie die Anfrage ab und speichern Sie sie in der Datenbank.     
+    */
     private function finalizeInquiry(Request $request)
     {
         $answers = (array) $request->session()->get('chatbot.answers', []);
         $totalEstimate = 0;
         $selectedModules = [];
 
-        // المرحلة الأولى: الفلترة وحساب السعر الإجمالي
+        // Die erste Phase: Filtern und Berechnen des Gesamtpreises
         foreach ($answers as $key => $value) {
             $module = PriceModule::where('key', $key)->first();
             if (! $module) {
                 continue;
             }
 
-            if ($module->type === 'quantity' && is_numeric($value) && (int) $value > 0) {
-                $totalEstimate += ($module->price * (int) $value);
-                $selectedModules[] = ['module' => $module, 'qty' => (int) $value, 'customer_choice' => (string) $value];
-            } elseif ($module->type === 'boolean' && ($value === true || $value === 'Ja')) {
-                $totalEstimate += $module->price;
-                $selectedModules[] = ['module' => $module, 'qty' => 1, 'customer_choice' => 'Ja'];
-            } elseif ($module->type === 'select') {
-                $options = is_array($module->options) ? $module->options : json_decode($module->options, true) ?? [];
+            if ($module->typ === 'quantity' && is_numeric($value) && (int) $value > 0) {
+                $totalEstimate += ($module->preis * (int) $value);
+                $selectedModules[] = ['module' => $module, 'qty' => (int) $value, 'kunden_auswahl' => (string) $value];
+            } elseif ($module->typ === 'boolean' && ($value === true || $value === 'Ja')) {
+                $totalEstimate += $module->preis;
+                $selectedModules[] = ['module' => $module, 'qty' => 1, 'kunden_auswahl' => 'Ja'];
+            } elseif ($module->typ === 'select') {
+                $options = is_array($module->optionen) ? $module->optionen : json_decode((string) $module->optionen, true) ?? [];
 
                 if (! empty($options)) {
                     // DB-driven logic
@@ -246,7 +246,7 @@ class ChatBotController extends Controller
 
                     if ($found) {
                         $totalEstimate += $price;
-                        $selectedModules[] = ['module' => $module, 'qty' => 1, 'override_price' => $price, 'customer_choice' => (string) $value];
+                        $selectedModules[] = ['module' => $module, 'qty' => 1, 'override_preis' => $price, 'kunden_auswahl' => (string) $value];
                     }
                 } else {
                     // Fallback to hardcoded logic
@@ -256,7 +256,7 @@ class ChatBotController extends Controller
 
                         if ($price > 0) {
                             $totalEstimate += $price;
-                            $selectedModules[] = ['module' => $module, 'qty' => 1, 'override_price' => $price, 'customer_choice' => (string) $value];
+                            $selectedModules[] = ['module' => $module, 'qty' => 1, 'override_preis' => $price, 'kunden_auswahl' => (string) $value];
                         }
                     } elseif ($module->key === 'anzahl_der_seiten') {
 
@@ -269,10 +269,10 @@ class ChatBotController extends Controller
                         if ($price > 0) {
                             $totalEstimate += $price;
                             $selectedModules[] = [
-                                'module' => $module,
-                                'qty' => 1,
-                                'override_price' => $price,
-                                'customer_choice' => (string) $value,
+                                'module'        => $module,
+                                'qty'           => 1,
+                                'override_preis' => $price,
+                                'kunden_auswahl' => (string) $value,
                             ];
                         }
                     } elseif ($module->key === 'anzahl_der_sprachen') {
@@ -280,38 +280,38 @@ class ChatBotController extends Controller
 
                         if ($price > 0) {
                             $totalEstimate += $price;
-                            $selectedModules[] = ['module' => $module, 'qty' => 1, 'override_price' => $price, 'customer_choice' => (string) $value];
+                            $selectedModules[] = ['module' => $module, 'qty' => 1, 'override_preis' => $price, 'kunden_auswahl' => (string) $value];
                         }
                     }
                 }
             }
         }
 
-        // المرحلة الثانية: إنشاء الاستفسار الرئيسي (Inquiry)
+        //Phase Zwei: Erstellung der Hauptanfrage
         $quoteNumber = 'BOT-'.date('Ymd').'-'.strtoupper(Str::random(4));
         $inquiry = Inquiry::create([
-            'quote_number' => $quoteNumber,
-            'session_id' => $request->session()->getId(),
-            'user_id' => $request->user()?->id,
-            'total_estimated_price' => $totalEstimate,
-            'status' => 'pending',
+            'angebot_nummer'          => $quoteNumber,
+            'sessions_id'             => $request->session()->getId(),
+            'user_id'                 => $request->user()?->id,
+            'geschätzter_gesamtpreis' => $totalEstimate,
+            'status'                  => 'offen',
         ]);
 
-        // المرحلة الثالثة: حفظ العناصر المختارة فقط في الجدول الوسيط
+        // Phase Drei: Speichern der ausgewählten Elemente nur in der Zwischentabelle
         foreach ($selectedModules as $item) {
             InquiryItem::create([
-                'inquiry_id' => $inquiry->id,
-                'price_module_id' => $item['module']->id,
-                'price_at_time' => $item['override_price'] ?? $item['module']->price,
-                'quantity' => $item['qty'],
-                'customer_choice' => $item['customer_choice'] ?? null,
+                'anfrage_id'         => $inquiry->id,
+                'preis_module_id'    => $item['module']->id,
+                'preis_zum_zeitpunkt' => $item['override_preis'] ?? $item['module']->preis,
+                'menge'              => $item['qty'],
+                'kunden_auswahl'     => $item['kunden_auswahl'] ?? null,
             ]);
         }
 
         return response()->json([
-            'bot' => "Vielen Dank!\nIhre Schätzung: ** ".number_format($totalEstimate, 2, ',', '.')." €**\n"
+            'bot'     => "Vielen Dank!\nIhre Schätzung: ** ".number_format($totalEstimate, 2, ',', '.')." €**\n"
                 ."Angebot Nummer: **{$quoteNumber}**",
-            'done' => true,
+            'done'    => true,
             'pdf_url' => route('chatbot.pdf', ['quote' => $quoteNumber]),
         ]);
     }
@@ -393,7 +393,7 @@ class ChatBotController extends Controller
     public function downloadPdf($quoteNumber)
     {
         $inquiry = Inquiry::with('items.priceModule')
-            ->where('quote_number', $quoteNumber)
+            ->where('angebot_nummer', $quoteNumber)
             ->firstOrFail();
 
         // Temporarily commented out for testing HTML/CSS
@@ -408,7 +408,7 @@ class ChatBotController extends Controller
     public function embeddedPdf($quoteNumber)
     {
         $inquiry = Inquiry::with('items.priceModule')
-            ->where('quote_number', $quoteNumber)
+            ->where('angebot_nummer', $quoteNumber)
             ->firstOrFail();
 
         return view('pdf.quote', compact('inquiry'));

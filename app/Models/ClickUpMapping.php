@@ -6,26 +6,27 @@ use Illuminate\Database\Eloquent\Model;
 
 class ClickUpMapping extends Model
 {
-    protected $guarded = [];
-
-    // Table name since it differs from 'click_up_mappings'
+    // Maps to the 'clickup_mappings' table
     protected $table = 'clickup_mappings';
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
+    protected $fillable = [
+        'anfrage_id',
+        'clickup_aufgabe_id',
+        'clickup_status_name',
+        'zuletzt_synchronisiert_am',
+        'rohe_api_antwort',
+    ];
+
     protected $casts = [
-        'last_synced_at' => 'datetime',
-        'raw_api_response' => 'array',
+        'zuletzt_synchronisiert_am' => 'datetime',
+        'rohe_api_antwort'          => 'array',
     ];
 
     /**
-     * Get the inquiry that owns the mapping.
+     * Get the inquiry that owns this mapping.
      */
     public function inquiry()
     {
-        return $this->belongsTo(Inquiry::class);
+        return $this->belongsTo(Inquiry::class, 'anfrage_id');
     }
 }

@@ -61,7 +61,7 @@
         <div class="card-body">
             <div class="row align-items-center">
                 <div class="col-md-4">
-                    <p class="mb-1 text-muted">Projekt: <strong>{{ $activeInquiry->quote_number }}</strong></p>
+                    <p class="mb-1 text-muted">Projekt: <strong>{{ $activeInquiry->angebot_nummer }}</strong></p>
                     <p class="mb-0">Status: 
                         <span class="badge rounded-pill bg-info text-dark">
                             {{ $activeInquiry->clickUpMapping->clickup_status_name }}
@@ -84,7 +84,7 @@
                     @endphp
                     <div class="d-flex justify-content-between mb-2">
                         <span class="small fw-bold">{{ $percent }}% abgeschlossen</span>
-                        <small class="text-muted">Letzter Sync: {{ $activeInquiry->clickUpMapping->last_synced_at ? $activeInquiry->clickUpMapping->last_synced_at->diffForHumans() : 'Gerade eben' }}</small>
+                        <small class="text-muted">Letzter Sync: {{ $activeInquiry->clickUpMapping->zuletzt_synchronisiert_am ? $activeInquiry->clickUpMapping->zuletzt_synchronisiert_am->diffForHumans() : 'Gerade eben' }}</small>
                     </div>
                     <div class="progress" style="height: 12px; border-radius: 10px;">
                         <div class="progress-bar progress-bar-striped progress-bar-animated {{ $barColor }}" 
@@ -108,7 +108,7 @@
                         <tr>
                             <th class="ps-4">Anfrage-Nr./ Projekt</th>
                             <th>Datum</th>
-                            <th>Summe (Netto)</th>
+                            <th>Summe</th>
                             <th>Status</th>
                             <th class="text-end pe-4">Aktion</th>
                         </tr>
@@ -116,23 +116,23 @@
                     <tbody>
                         @forelse($inquiries as $inq)
                         <tr>
-                            <td class="ps-4"><strong>{{ $inq->quote_number }}</strong></td>
+                            <td class="ps-4"><strong>{{ $inq->angebot_nummer }}</strong></td>
                             <td>{{ $inq->created_at->format('d.m.Y') }}</td>
-                            <td>{{ number_format($inq->total_estimated_price, 2, ',', '.') }} €</td>
+                            <td>{{ number_format($inq->geschätzter_gesamtpreis, 2, ',', '.') }} €</td>
                             <td>
-                                @if($inq->status === 'pending')
+                                @if($inq->status === 'offen')
                                     <span class="badge bg-warning text-dark px-3">In Prüfung</span>
-                                @elseif($inq->status === 'confirmed')
+                                @elseif($inq->status === 'bestätigt')
                                     <span class="badge bg-success px-3">Bestätigt</span>
                                 @else
                                     <span class="badge bg-secondary px-3">Archiviert</span>
                                 @endif
                             </td>
                             <td class="text-end pe-4">
-                                <button class="btn btn-sm btn-outline-primary shadow-sm me-1" data-bs-toggle="modal" data-bs-target="#pdfModal" data-quote="{{ $inq->quote_number }}">
+                                <button class="btn btn-sm btn-outline-primary shadow-sm me-1" data-bs-toggle="modal" data-bs-target="#pdfModal" data-quote="{{ $inq->angebot_nummer }}">
                                     <i class="bi bi-eye"></i> Anzeigen
                                 </button>
-                                <a href="{{ route('chatbot.pdf', $inq->quote_number) }}" class="btn btn-sm btn-outline-danger shadow-sm" target="_blank">
+                                <a href="{{ route('chatbot.pdf', $inq->angebot_nummer) }}" class="btn btn-sm btn-outline-danger shadow-sm" target="_blank">
                                     <i class="bi bi-file-earmark-pdf"></i> Download
                                 </a>
                             </td>

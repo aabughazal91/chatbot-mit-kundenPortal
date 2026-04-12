@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Kalkulation - {{ $inquiry->quote_number }}</title>
+    <title>Kalkulation - {{ $inquiry->angebot_nummer }}</title>
     <style>
 /* Page */
 @page {
@@ -176,13 +176,13 @@ body {
 
             <td style="text-align:right;">
                 <div class="subtitle">
-                    @if(Str::startsWith($inquiry->quote_number, 'BOT-'))
+                    @if(Str::startsWith($inquiry->angebot_nummer, 'BOT-'))
                         Angebot-Nr
                     @else
                         Projekt
                     @endif
                 </div>
-                <div><strong>{{ $inquiry->quote_number }}</strong></div>
+                <div><strong>{{ $inquiry->angebot_nummer }}</strong></div>
 
                 <div class="subtitle" style="margin-top:10px;">Datum</div>
                 <div>{{ $inquiry->created_at->format('d.m.Y') }}</div>
@@ -209,10 +209,10 @@ body {
     <tbody>
         @foreach($inquiry->items as $item)
         <tr>
-            <td>{{ $item->priceModule ? $item->priceModule->label_de : '-' }}</td>
-            <td>{{ $item->customer_choice ?? ($item->quantity > 1 ? $item->quantity . 'x' : 'Ja') }}</td>
+            <td>{{ $item->priceModule ? $item->priceModule->bezeichnung_de : '-' }}</td>
+            <td>{{ $item->kunden_auswahl ?? ($item->menge > 1 ? $item->menge . 'x' : 'Ja') }}</td>
             <td class="right">
-                {{ number_format($item->price_at_time * $item->quantity, 2, ',', '.') }}
+                {{ number_format($item->preis_zum_zeitpunkt * $item->menge, 2, ',', '.') }}
             </td>
         </tr>
         @endforeach
@@ -224,7 +224,7 @@ body {
     <tr class="total-row">
         <td class="total-label">Gesamtsumme</td>
         <td class="total-value right">
-            {{ number_format($inquiry->total_estimated_price, 2, ',', '.') }} €
+            {{ number_format($inquiry->geschätzter_gesamtpreis, 2, ',', '.') }} €
         </td>
     </tr>
 </table>
@@ -233,7 +233,7 @@ body {
     <div class="footer">
     Diese Kalkulation ist unverbindlich und dient zur Orientierung.<br>
     
-    ** Für zukünftige fragen bitte angebotnummer angeben: <strong>{{ $inquiry->quote_number }}</strong> **<br>
+    ** Für zukünftige fragen bitte angebotnummer angeben: <strong>{{ $inquiry->angebot_nummer }}</strong> **<br>
      <a href="https://www.agentur-77.de/designvorschlag/#kontakt">
         Für eine detaillierte Beratung und ein maßgeschneidertes Angebot kontaktieren Sie uns gerne.
     </a>

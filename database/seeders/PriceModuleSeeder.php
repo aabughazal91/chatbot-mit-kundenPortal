@@ -12,35 +12,41 @@ class PriceModuleSeeder extends Seeder
      */
     public function run(): void
     {
-        PriceModule::create([
-            'key' => 'design_type',
-            'label_de' => 'Was benötigen Sie?',
-            'description' => 'Neues Design oder Überarbeitung',
-            'price' => 0,
-            'type' => 'select',
-            'category' => 'base',
-            'is_active' => true
-        ]);
+        PriceModule::firstOrCreate(
+            ['key' => 'design_type'],
+            [
+                'bezeichnung_de' => 'Was benötigen Sie?',
+                'beschreibung' => 'Neues Design oder Überarbeitung',
+                'preis' => 0,
+                'typ' => 'select',
+                'kategorie' => 'base',
+                'ist_aktiv' => true
+            ]
+        );
 
-        PriceModule::create([
-            'key' => 'anzahl_der_seiten',
-            'label_de' => 'Anzahl der Seiten',
-            'description' => 'Wie viele Seiten benötigen Sie?',
-            'price' => 0,
-            'type' => 'select',
-            'category' => 'base',
-            'is_active' => true
-        ]);
+        PriceModule::firstOrCreate(
+            ['key' => 'anzahl_der_seiten'],
+            [
+                'bezeichnung_de' => 'Anzahl der Seiten',
+                'beschreibung' => 'Wie viele Seiten benötigen Sie?',
+                'preis' => 0,
+                'typ' => 'select',
+                'kategorie' => 'base',
+                'ist_aktiv' => true
+            ]
+        );
 
-        PriceModule::create([
-            'key' => 'cms_basic',
-            'label_de' => 'Webseite mit CMS',
-            'description' => 'Verwaltung von Inhalte über ein Backend',
-            'price' => 1500.00,
-            'type' => 'boolean',
-            'category' => 'base',
-            'is_active' => true
-        ]);
+        PriceModule::firstOrCreate(
+            ['key' => 'cms_basic'],
+            [
+                'bezeichnung_de' => 'Webseite mit CMS',
+                'beschreibung' => 'Verwaltung von Inhalte über ein Backend',
+                'preis' => 1500.00,
+                'typ' => 'boolean',
+                'kategorie' => 'base',
+                'ist_aktiv' => true
+            ]
+        );
     }
 
 }

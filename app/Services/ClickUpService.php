@@ -14,7 +14,7 @@ class ClickUpService
 
     public function __construct()
     {
-        // نستدعي التوكن من الكونفج الذي يعتمد بدوره على .env
+        // Wir rufen das Token aus der Konfiguration ab, die wiederum auf .env basiert
         $this->apiKey = config('services.clickup.token') ?? '';
         if (empty($this->apiKey)) {
             Log::warning('ClickUpService: API key is missing.');
@@ -37,13 +37,13 @@ class ClickUpService
         }
 
         try {
-            // إرسال الطلب لـ ClickUp API
+            // Anfrage an ClickUp API senden
             $response = Http::withHeaders([
                 'Authorization' => $this->apiKey,
                 'Content-Type' => 'application/json',
             ])->get("{$this->baseUrl}/task/{$taskId}");
 
-            // التحقق من نجاح الرد
+            // Überprüfung des Erfolgs der Antwort
             if ($response->successful()) {
                 $data = $response->json();
 
@@ -53,7 +53,7 @@ class ClickUpService
                 ];
             }
 
-            // التعامل مع الأخطاء وإرسالها للسجل (Rate limits, Not Found, etc.)
+            // Fehlerbehandlung und Protokollierung (Rate limits, Not Found, etc.)
             $status = $response->status();
             $body = $response->body();
 
@@ -67,7 +67,7 @@ class ClickUpService
 
             return null;
         } catch (Exception $e) {
-            // التعامل مع انقطاع الإنترنت أو أخطاء السيرفر (مهم للـ IHK)
+            // Umgang mit Internetunterbrechungen oder Serverfehlern (wichtig für IHK)
             Log::error("ClickUpService: Exception while fetching task {$taskId}. Message: ".$e->getMessage());
 
             return null;

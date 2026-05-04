@@ -27,7 +27,7 @@
 
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <label for="name" class="form-label">Name</label>
+                    <label for="name" class="form-label">Name*</label>
                     <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $customer->name) }}" required>
                 </div>
                 <div class="col-md-6">
@@ -38,41 +38,35 @@
 
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <label for="email" class="form-label">Email</label>
+                    <label for="email" class="form-label">Email*</label>
                     <input type="email" class="form-control" id="email" name="email" value="{{ old('email', $customer->email) }}" required>
                 </div>
-                @if($customer->exists)
-                    <div class="col-md-6">
-                        <label for="password" class="form-label">Neues Passwort (optional)</label>
-                        <input type="password" class="form-control" id="password" name="password">
-                        <div class="form-text">Leer lassen, um das aktuelle Passwort zu behalten.</div>
-                    </div>
-                @else
+                
                     <div class="col-md-6">
                         <label for="password" class="form-label">Passwort</label>
                         <input type="text" class="form-control" disabled value="Wird automatisch generiert">
                         <div class="form-text">Das Passwort wird generiert und per E-Mail versendet.</div>
                     </div>
-                @endif
+                
             </div>
             <div class="row mb-3">
                     <div class="col-md-6">
-                        <label for="company" class="form-label">Firma</label>
-                        <input type="text" class="form-control" id="company" name="company" value="{{ old('company', $customer->company) }}" >
+                        <label for="firma" class="form-label">Firma</label>
+                        <input type="text" class="form-control" id="firma" name="firma" value="{{ old('firma', $customer->firma) }}" >
                     </div>
                     <div class="col-md-6">
-                        <label for="phone" class="form-label">Telefon</label>
-                        <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone', $customer->phone) }}" >
+                        <label for="tel" class="form-label">Telefon</label>
+                        <input type="text" class="form-control" id="tel" name="tel" value="{{ old('tel', $customer->tel) }}" >
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label for="street" class="form-label">Straße + Hausnummer</label>
-                        <input type="text" class="form-control" id="street" name="street" value="{{ old('street', $customer->street) }}" >
+                        <label for="strasse" class="form-label">Straße + Hausnummer</label>
+                        <input type="text" class="form-control" id="strasse" name="strasse" value="{{ old('strasse', $customer->strasse) }}" >
                     </div>
                     <div class="col-md-6">
-                        <label for="zip" class="form-label">PLZ + Ort</label>
-                        <input type="text" class="form-control" id="zip" name="zip" value="{{ old('zip', $customer->zip) }}" >
+                        <label for="zip_stadt" class="form-label">PLZ + Ort</label>
+                        <input type="text" class="form-control" id="zip_stadt" name="zip_stadt" value="{{ old('zip_stadt', $customer->zip_stadt) }}" >
                     </div>
                 </div>
 
@@ -80,7 +74,7 @@
                 <div class="col-md-6">
                     <label for="role" class="form-label">Rolle</label>
                     <select class="form-select" id="role" name="role" required>
-                        <option value="customer" {{ old('role', $customer->role) === 'customer' || old('role', $customer->role) === 'customer' ? 'selected' : '' }}>Kunde</option>
+                        <option value="kunde" {{ old('role', $customer->role) === 'kunde' || old('role', $customer->role) === 'kunde' ? 'selected' : '' }}>Kunde</option>
                         <option value="admin" {{ old('role', $customer->role) === 'admin' ? 'selected' : '' }}>Admin</option>
                     </select>
                 </div>

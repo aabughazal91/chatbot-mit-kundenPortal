@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use App\Mail\WelcomeCustomerMail;
+use Illuminate\Support\Facades\Log;
 
 class CustomerController extends Controller
 {
@@ -31,12 +32,11 @@ class CustomerController extends Controller
             'name' => 'required|string|max:255',
             'username' => 'nullable|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
-            'company' => 'nullable|string|max:255',
-            'phone' => 'nullable|string|max:255',
-            'street' => 'nullable|string|max:255',
-            'zip' => 'nullable|string|max:255',
-            'city' => 'nullable|string|max:255',
-            'role' => ['required', Rule::in(['admin', 'customer'])],
+            'firma'     => 'nullable|string|max:255',
+            'tel'       => 'nullable|string|max:255',
+            'strasse'   => 'nullable|string|max:255',
+            'zip_stadt' => 'nullable|string|max:255',
+            'role' => ['required', Rule::in(['admin', 'kunde'])],
             'is_confirmed' => 'nullable|boolean',
         ]);
 
@@ -47,7 +47,13 @@ class CustomerController extends Controller
 
         $user = User::create($data);
 
-        Mail::to($user->email)->send(new WelcomeCustomerMail($user, $rawPassword));
+        try {
+            Mail::to($user->email)->send(new WelcomeCustomerMail($user, $rawPassword));
+        } catch (\Exception $e) {
+            Log::error('Welcome mail failed: ' . $e->getMessage());
+            // Trotzdem weiterleiten mit Hinweis:
+            return redirect()->route('admin.customers.index')->with('warning', 'Benutzer erstellt, E-Mail konnte nicht gesendet werden.');
+        }
 
         return redirect()->route('admin.customers.index')->with('success', 'Kunde erfolgreich erstellt.');
     }
@@ -64,12 +70,11 @@ class CustomerController extends Controller
             'username' => ['nullable', 'string', 'max:255', Rule::unique('users')->ignore($customer->id)],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($customer->id)],
             'password' => 'nullable|string|min:8',
-            'company' => 'nullable|string|max:255',
-            'phone' => 'nullable|string|max:255',
-            'street' => 'nullable|string|max:255',
-            'zip' => 'nullable|string|max:255',
-            'city' => 'nullable|string|max:255',
-            'role' => ['required', Rule::in(['admin', 'customer'])],
+           'firma'     => 'nullable|string|max:255',
+            'tel'       => 'nullable|string|max:255',
+            'strasse'   => 'nullable|string|max:255',
+            'zip_stadt' => 'nullable|string|max:255',
+            'role' => ['required', Rule::in(['admin', 'kunde'])],
             'is_confirmed' => 'nullable|boolean',
         ]);
 
@@ -89,7 +94,7 @@ class CustomerController extends Controller
 
     public function destroy(User $customer)
     {
-        if ($customer->id === auth()->id()) {
+        if ($customer->id === \Illuminate\Support\Facades\Auth::id()) {
             return redirect()->route('admin.customers.index')->with('error', 'Sie können Ihren eigenen Account nicht löschen.');
         }
 

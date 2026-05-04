@@ -58,7 +58,8 @@ class SyncClickUpStatus extends Command
 
                 $newStatus = $response['status_name'];
 
-                // 3. Datenbankaktualisierung                $mapping->clickup_status_name = $newStatus;
+                // 3. Datenbankaktualisierung                
+                $mapping->clickup_status_name = $newStatus;
                 $mapping->zuletzt_synchronisiert_am = Carbon::now();
                 $mapping->save();
 

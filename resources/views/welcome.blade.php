@@ -18,6 +18,13 @@
             <nav class="position-absolute top-0 end-0 p-4 z-10">
                 @auth
                     <a href="{{ url('/dashboard') }}" class="btn btn-light btn-sm">Dashboard</a>
+                    <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="btn btn-sm btn-outline-light w-75">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </button>
+                </form>
+                    
                 @else
                     <a href="{{ route('login') }}" class="btn btn-outline-light btn-sm me-2">Log in</a>
                     @if (Route::has('register'))

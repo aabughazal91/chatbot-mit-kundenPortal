@@ -34,7 +34,6 @@ class ClickUpController extends Controller
         $taskData = $this->clickUpService->getTaskStatus($taskId);
 
         if (! $taskData) {
-            // معالجة الأخطاء (IHK requirement)
             return back()->withErrors([
                 'clickup_error' => 'Could not fetch task from ClickUp. Please verify the Task ID and your internet connection.',
             ]);

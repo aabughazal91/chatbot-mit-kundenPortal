@@ -16,8 +16,8 @@ class CustomerMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Check if user is logged in and is a customer
-        if (Auth::check() && Auth::user()->role === 'customer') {
+        // Check if user is logged in and is a customer (or 'kunde' in German)
+        if (Auth::check() && in_array(Auth::user()->role, ['customer', 'kunde'])) {
             return $next($request);
         }
 
